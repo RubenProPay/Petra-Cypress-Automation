@@ -1,12 +1,13 @@
-# Ignore everything
+# Ignore everything by default
 *
 
-# Except these folders/files:
-!cypress/
+# Whitelist these files and folders
+!/.gitignore
+!/cypress/
+!/cypress/**/*
 !cypress.config.js
 !package.json
 !package-lock.json
-!.gitignore
 
 # Ignore system folders and unnecessary stuff
 node_modules/
