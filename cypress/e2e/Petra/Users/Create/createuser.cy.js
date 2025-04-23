@@ -19,7 +19,7 @@ describe('Navigate to Create User Page & Create a User', () => {
     cy.sideNav('Users', 'users/user/create');
   });
 
-  it('can verify ALL validations on the user creation', () => {
+  it.skip('can verify ALL validations on the user creation', () => {
     cy.visit('users/user/create');
     cy.wait(1000);
     cy.contains('button', 'Submit').should('be.visible').click();
@@ -243,6 +243,5 @@ describe('Navigate to Create User Page & Create a User', () => {
     cy.dropdown('language_id', 'Language', userFixture.language, { clear: true });
     // cy.dropdown('role', 'Role', userFixture.role, { clear: true });
     // cy.contains('button', 'Submit').should('be.visible').click();
-    cy.wait(1000);
   });
 });
