@@ -11,8 +11,10 @@ module.exports = defineConfig({
           const id_number = faker.number.int({ min: 1000000000000, max: 9999999999999 }).toString();
           const cell = '0' + faker.number.int({ min: 600000000, max: 899999999 });
           const email = faker.internet.email({ firstName: name, lastName: surname }).toLowerCase();
-          const language_id = faker.helpers.arrayElement([0, 1]); // 1 = Afrikaans, 2 = English (example)
-          const call_center_id = faker.number.int({ min: 0, max: 10 }); // Simulated ID range
+
+          const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
+          const role = faker.helpers.arrayElement(['Data Capturer', 'National Admin (Head Office)', 'Provincial Admin', 'User (Viewer)']);
+          const call_center = faker.helpers.arrayElement(['Eastern Cape Call Centre', 'Free State Call Centre', 'Gauteng Call Centre', 'Kwazulu-Natal Call Centre', 'Limpopo Call Centre', 'Mpumalanga Call Centre', 'Northern Cape Call Centre', 'North West Call Centre', 'Western Cape Call Centre', 'International Call Centre', 'Head Office']);
 
           return {
             name,
@@ -20,8 +22,9 @@ module.exports = defineConfig({
             id_number,
             cell,
             email,
-            language_id,
-            call_center_id
+            language,
+            call_center,
+            role
           };
         }
       });
