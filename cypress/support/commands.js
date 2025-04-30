@@ -71,6 +71,46 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
   });
 });
 
+// Searchable dropdowns (with input field inside)
+Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options = { clear: false }) => {
+  const fullItemText = item;
+
+  const container = cy.get(`div[form-wrapper="${labelFor}"]`);
+
+  if (options.clear) {
+    container
+      .find('div[name="form.wrapper.container.append"]')
+      .find('button')
+      .first()
+      .click({ force: true });
+    cy.wait(500);
+  }
+
+  // Open dropdown
+  cy.contains('label', labelText)
+    .should('be.visible')
+    .click({ force: true });
+
+  // Retry input interaction if dropdown rerenders
+  cy.get('.max-h-80:visible', { timeout: 6000 }).should('exist');
+
+  cy.get('.max-h-80:visible input[type="search"]', { timeout: 4000 })
+    .should('be.visible')
+    .click({ force: true }) // ensure focus
+    .clear()
+    .type(fullItemText, { delay: 100, force: true });
+
+  // Wait and click the item AFTER it appears
+  cy.get('.max-h-80:visible')
+    .should('be.visible')
+    .contains('div', fullItemText, { timeout: 6000 })
+    .should('be.visible')
+    .click({ force: true });
+
+  // Wait after dropdown closes to ensure stability
+  cy.wait(500);
+});
+
 // Creating a user on the system
 Cypress.Commands.add('generateUserFixture', () => {
   const allProvinces = [
