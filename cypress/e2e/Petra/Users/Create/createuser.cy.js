@@ -242,7 +242,7 @@ describe('Navigate to Create User Page & Create a User', () => {
     cy.get('input[id="cell"]').type(userFixture.cell);
     cy.dropdown('language_id', 'Language', userFixture.language, { clear: true });
     cy.dropdown('role', 'Role', userFixture.role, { clear: true });
-    cy.dropdown('call_center_id', 'Call Center', userFixture.call_center, { clear: true });
+    cy.dropdown('call_center_id', 'Call Center *', userFixture.call_center, { clear: true });
     cy.dropdown('province_ids', 'Province', userFixture.province, {clear: true});
     // cy.contains('button', 'Submit').should('be.visible').click();
   });

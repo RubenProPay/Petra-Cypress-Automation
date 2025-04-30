@@ -42,7 +42,7 @@ Cypress.Commands.add('sideNav', (module, page) => {
 
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
-  const fullItemText = item === 'Afrikaans' ? 'af Afrikaans' : 'en English';
+  const fullItemText = item;
 
   const container = cy.get(`div[form-wrapper="${labelFor}"]`);
 
@@ -51,7 +51,7 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
       .find('div[name="form.wrapper.container.append"]')
       .find('button')
       .first()
-      .click();
+      .click({force:true});
     cy.wait(500);
   }
 
@@ -61,14 +61,14 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
     .click();
 
   // Wait for dropdown to appear and interact with it
-  cy.get('.max-h-80:visible') // Only visible dropdowns
-    .first()                  // In case more than one is found
-    .should('be.visible')
-    .within(() => {
-      cy.contains('li div div', fullItemText)
-        .should('be.visible')
-        .click({ force: true });
-    });
+  cy.get('.max-h-80:visible')
+  .first()
+  .should('be.visible')
+  .within(() => {
+    cy.contains('div', fullItemText)
+      .should('be.visible')
+      .click({ force: true });
+  });
 });
 
 // Creating a user on the system
