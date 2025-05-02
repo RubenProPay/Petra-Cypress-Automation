@@ -76,40 +76,43 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
   const fullItemText = item;
 
   const container = cy.get(`div[form-wrapper="${labelFor}"]`);
-
   if (options.clear) {
-    container
-      .find('div[name="form.wrapper.container.append"]')
+    container.find('div[name="form.wrapper.container.append"]')
       .find('button')
       .first()
       .click({ force: true });
-    cy.wait(500);
+    cy.wait(300);
   }
 
-  // Open dropdown
+  // First attempt to open dropdown
   cy.contains('label', labelText)
     .should('be.visible')
     .click({ force: true });
 
-  // Retry input interaction if dropdown rerenders
-  cy.get('.max-h-80:visible', { timeout: 6000 }).should('exist');
+  cy.wait(200);
+
+  // Click away to trigger stabilization (e.g. click the name input)
+  cy.get('input[id="name"]').click({ force: true });
+
+  cy.wait(300);
+
+  // Re-click the dropdown to force Alpine to settle
+  cy.contains('label', labelText)
+    .click({ force: true });
 
   cy.get('.max-h-80:visible input[type="search"]', { timeout: 4000 })
     .should('be.visible')
-    .click({ force: true }) // ensure focus
+    .click({ force: true })
     .clear()
     .type(fullItemText, { delay: 100, force: true });
 
-  // Wait and click the item AFTER it appears
-  cy.get('.max-h-80:visible')
-    .should('be.visible')
-    .contains('div', fullItemText, { timeout: 6000 })
+  cy.contains('.max-h-80:visible div', fullItemText, { timeout: 6000 })
     .should('be.visible')
     .click({ force: true });
 
-  // Wait after dropdown closes to ensure stability
-  cy.wait(500);
+  cy.wait(300);
 });
+
 
 // Creating a user on the system
 Cypress.Commands.add('generateUserFixture', () => {
