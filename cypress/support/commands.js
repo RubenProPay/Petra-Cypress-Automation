@@ -114,6 +114,33 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
   cy.wait(300);
 });
 
+Cypress.Commands.add('selectCallCenterAndProvinces', (userFixture) => {
+  const { role, call_center, province } = userFixture;
+
+  // Select Call Center using stable logic
+  cy.searchableDropdown('call_center_id', 'Call Center *', call_center, { clear: true });
+
+  // Wait for Livewire to finish updating the provinces
+  if (call_center === 'Head Office') {
+    cy.wait(1000);
+  }
+
+  // If Head Office user, select ALL provinces using existing dropdown command
+  if (role === 'National Admin (Head Office)' && call_center === 'Head Office') {
+    const provinces = [
+      'Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal',
+      'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'
+    ];
+
+    provinces.forEach((prov, index) => {
+      cy.searchableDropdown('province_ids', 'Province', prov);
+    });
+
+  } else {
+    // Normal case: just select one province
+    cy.searchableDropdown('province_ids', 'Province', province, { clear: true });
+  }
+});
 
 // Creating a user on the system
 Cypress.Commands.add('generateUserFixture', () => {
