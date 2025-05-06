@@ -3,6 +3,7 @@ const { faker } = require('@faker-js/faker');
 
 module.exports = defineConfig({
   e2e: {
+    experimentalSessionAndOrigin: true, // <-- Add this line
     setupNodeEvents(on, config) {
       on('task', {
         generateUser() {
