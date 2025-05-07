@@ -323,3 +323,26 @@ Cypress.Commands.add('generateLanguage', () => {
 
   return generateLanguage();
 });
+
+// Generating Role Fixture
+Cypress.Commands.add('generateRoleFixture', () => {
+  const roleFixture = {};
+
+  // Generate random role name starting with 'CyRole-'
+  const randomSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
+  roleFixture.name = `CyRole-${randomSuffix}`;
+
+  // Optionally define permissions here or let the test handle it manually
+  roleFixture.permissions = []; // You can populate with real permissions later
+
+  // Basic sanity check
+  expect(roleFixture.name).to.match(/^CyRole-\w{5}$/);
+
+  // Debug log
+  cy.log(`Generated role fixture: ${roleFixture.name}`);
+
+  // Save to fixture (optional — remove if not needed)
+  return cy.writeFile('cypress/fixtures/role.json', roleFixture).then(() => {
+    return cy.wrap(roleFixture);
+  });
+});
