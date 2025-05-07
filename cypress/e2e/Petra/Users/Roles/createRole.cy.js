@@ -17,7 +17,7 @@ describe('Navigate to the Create Role page & create a role', () => {
     cy.sideNav('Users', 'roles');
   });
 
-  it('clicks on the create modal to create a new role', () => {
+  it('creates a role & assigns permissions', () => {
     cy.visit('/roles');
     cy.wait(1000);
     cy.contains('button', 'Create').should('be.visible').click();
@@ -29,7 +29,7 @@ describe('Navigate to the Create Role page & create a role', () => {
 
     cy.log(`Created role: ${roleFixture.name}`);
     cy.contains('button', 'Save').should('be.visible').click();
-
+    cy.wait(1000);    
   });
 
 });
