@@ -1,13 +1,13 @@
 import 'cypress-xpath';
 
-// Logs in as my root user
+// Logs in as root user
 Cypress.Commands.add("loginRoot", () => {
-  const sessionId = `user-session-ruben`; // Add detail to make it unique if needed
+  const sessionId = `user-session-cypress`; // Add detail to make it unique if needed
 
   cy.session(sessionId, () => {
     cy.visit("/login");
-    cy.get("input[name='email']", { timeout: 6000 }).should('be.visible').type("ruben.dasilva@propaysystems.com");
-    cy.get("input[name='password']").type("Prop@y");
+    cy.get("input[name='email']", { timeout: 6000 }).should('be.visible').type("propaycypressautomation@gmail.com");
+    cy.get("input[name='password']").type("ElongatedMango1103");
     cy.get("button[type='submit']").click();
     cy.url().should("not.include", "/login");
   }, {

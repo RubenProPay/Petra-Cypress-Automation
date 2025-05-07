@@ -17,7 +17,7 @@ describe('Forgot Password', () => {
     cy.get('a[href="https://staging.political.propaysystems.com/forgot-password"]').contains('Forgot Password?').should('be.visible').click();
     cy.wait(1000);
 
-    cy.get('input[name="email"]').type('ruben.dasilva@propaysystems.com');
+    cy.get('input[name="email"]').type('propaycypressautomation@gmail.com');
     cy.wait(1000);
 
     cy.get('button[type="submit"]').first().click({ force: true });
