@@ -21,7 +21,6 @@ describe('Navigate to the Create Role page & create a role', () => {
     cy.visit('/roles');
     cy.wait(1000);
     cy.contains('button', 'Create').should('be.visible').click();
-
     cy.contains('button', 'Save').should('be.visible').click();
 
     // Required validations
@@ -31,15 +30,12 @@ describe('Navigate to the Create Role page & create a role', () => {
 
     requiredValidations.forEach(({ label, message }) => {
       cy.get("input[name='name']")
-      .parent()
-      .siblings()
-      .contains('This is required.')
-      .should('be.visible');
+        .parent()
+        .siblings()
+        .contains('This is required.')
+        .should('be.visible');
     });
 
-    // cy.wait(1000);
-    // cy.reload();
-    // cy.wait(1000);
   });
 
   // it('creates a role & assigns permissions', () => {
