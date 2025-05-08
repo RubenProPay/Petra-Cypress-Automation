@@ -346,3 +346,12 @@ Cypress.Commands.add('generateRoleFixture', () => {
     return cy.wrap(roleFixture);
   });
 });
+
+// Handling accordion dropdowns
+Cypress.Commands.add('toggleAccordion', (label) => {
+  cy.contains('button', label, { timeout: 10000 })
+    .should(($btn) => {
+      expect($btn).to.be.visible;
+    })
+    .click();
+});

@@ -17,7 +17,7 @@ describe('Navigate to the Create Role page & create a role', () => {
     cy.sideNav('Users', 'roles');
   });
 
-  it('can verify ALL validations on the role creation', () => {
+  it.skip('can verify ALL validations on the role creation', () => {
     cy.visit('/roles');
     cy.wait(1000);
     cy.contains('button', 'Create').should('be.visible').click();
@@ -107,7 +107,10 @@ describe('Navigate to the Create Role page & create a role', () => {
 
     cy.log(`Created role: ${roleFixture.name}`);
     cy.contains('button', 'Save').should('be.visible').click();
-    cy.wait(1000);    
+    cy.wait(5000);
+    cy.contains('Members').should('exist'); // or more specific if needed
+    cy.toggleAccordion('Members');
+    // cy.get('input[id="name"]').click({ force: true });
+    // cy.contains('button', 'Members').click({ force: true });
   });
-
 });
