@@ -8,6 +8,14 @@ describe('Navigate to the Roles page & edit a role', () => {
       cy.visit("/");
       cy.wait(1000);
       cy.sideNav('Users', 'roles');
-     
+
+      cy.contains('Test')
+        .closest('tr') // or .closest('div') if it's a card layout
+        .within(() => {
+      cy.get('.fi-dropdown-trigger').click();
+      cy.contains('Edit').click();
+  });
+
+
     });
 });

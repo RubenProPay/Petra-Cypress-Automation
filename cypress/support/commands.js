@@ -347,11 +347,14 @@ Cypress.Commands.add('generateRoleFixture', () => {
   });
 });
 
-// Handling accordion dropdowns
-Cypress.Commands.add('toggleAccordion', (label) => {
-  cy.contains('button', label, { timeout: 10000 })
-    .should(($btn) => {
-      expect($btn).to.be.visible;
-    })
-    .click();
+// Toggle accordion by visible label text
+Cypress.Commands.add('expandAccordion', (label) => {
+  cy.contains('button', label).then(($btn) => {
+      const $icon = $btn.find('svg');
+
+      // Check if it's closed by checking the class (e.g. 'rotate-0' or missing '-rotate-180')
+      if (!$icon.hasClass('-rotate-180')) {
+          cy.wrap($btn).click();
+      }
+  });
 });

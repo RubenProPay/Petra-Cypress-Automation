@@ -107,10 +107,7 @@ describe('Navigate to the Create Role page & create a role', () => {
 
     cy.log(`Created role: ${roleFixture.name}`);
     cy.contains('button', 'Save').should('be.visible').click();
-    cy.wait(5000);
-    cy.contains('Members').should('exist'); // or more specific if needed
-    cy.toggleAccordion('Members');
-    // cy.get('input[id="name"]').click({ force: true });
-    // cy.contains('button', 'Members').click({ force: true });
+    cy.expandAccordion('Root');
+
   });
 });
