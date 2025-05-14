@@ -107,7 +107,8 @@ describe('Navigate to the Create Role page & create a role', () => {
 
     cy.log(`Created role: ${roleFixture.name}`);
     cy.contains('button', 'Save').should('be.visible').click();
-    cy.expandAccordion('Root');
+    cy.expandAccordion('Members');
+    // cy.expandAccordion('Members');
 
   });
 });

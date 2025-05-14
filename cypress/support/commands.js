@@ -358,3 +358,26 @@ Cypress.Commands.add('expandAccordion', (label) => {
       }
   });
 });
+
+// Wait for Livewire to finish loading
+Cypress.Commands.add('waitForLivewire', () => {
+  cy.get('#name', { timeout: 10000 }).should('be.visible');
+  cy.wait(500); // buffer for Alpine/Livewire settling
+});
+
+// Custom helper to wait for DOM stability
+Cypress.Commands.add('waitForRoleEditorReady', () => {
+  cy.log('Waiting for role editor to settle');
+
+  // Retry checking for a stable indicator, e.g. input is visible + accordion exists
+  cy.get('body', { timeout: 10000 }).should(() => {
+    const nameInput = Cypress.$('#name');
+    const membersAccordion = Cypress.$('button').filter((_, el) => el.textContent.includes('Members'));
+
+    if (!nameInput.is(':visible') || membersAccordion.length === 0) {
+      throw new Error('DOM not ready yet');
+    }
+  });
+
+  cy.wait(300); // Let Alpine stabilize
+});
