@@ -19,7 +19,13 @@ describe('Navigate to the Roles page & edit a role', () => {
     cy.get('#name').should('be.visible');
 
     cy.wait(1000);
-    // cy.expandAccordion('Members');
+
+    cy.get('div.max-w-3xl.mx-auto.divide-y.divide-gray-200')
+      .contains('span', 'Members-addresses')
+      .closest('button')
+      .click({force: true});
+
+    // cy.expandAccordion('Members-addresses');
   });
 
 });
