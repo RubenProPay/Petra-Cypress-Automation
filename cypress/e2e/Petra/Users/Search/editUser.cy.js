@@ -24,10 +24,7 @@ describe('Navigate to a User & edit', () => {
       cy.contains('button', 'Edit').click(); // Click "Edit"
       cy.wait(1000);
 
-      cy.contains('a', 'Permissions').click();
-
-      cy.expandAccordion('Members');
-    
+      cy.contains('a', 'Permissions').click();    
     
     });
   });

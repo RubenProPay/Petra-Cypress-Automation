@@ -24,3 +24,4 @@ Thumbs.db
 # Logs and environments
 *.log
 .env
+cypress/downloads/downloads.htm
