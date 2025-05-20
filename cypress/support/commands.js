@@ -347,37 +347,10 @@ Cypress.Commands.add('generateRoleFixture', () => {
   });
 });
 
-// Toggle accordion by visible label text
-Cypress.Commands.add('expandAccordion', (label) => {
-  cy.contains('button', label).then(($btn) => {
-      const $icon = $btn.find('svg');
-
-      // Check if it's closed by checking the class (e.g. 'rotate-0' or missing '-rotate-180')
-      if (!$icon.hasClass('-rotate-180')) {
-          cy.wrap($btn).click();
-      }
-  });
-});
-
-// Wait for Livewire to finish loading
-Cypress.Commands.add('waitForLivewire', () => {
-  cy.get('#name', { timeout: 10000 }).should('be.visible');
-  cy.wait(500); // buffer for Alpine/Livewire settling
-});
-
-// Custom helper to wait for DOM stability
-Cypress.Commands.add('waitForRoleEditorReady', () => {
-  cy.log('Waiting for role editor to settle');
-
-  // Retry checking for a stable indicator, e.g. input is visible + accordion exists
-  cy.get('body', { timeout: 10000 }).should(() => {
-    const nameInput = Cypress.$('#name');
-    const membersAccordion = Cypress.$('button').filter((_, el) => el.textContent.includes('Members'));
-
-    if (!nameInput.is(':visible') || membersAccordion.length === 0) {
-      throw new Error('DOM not ready yet');
-    }
-  });
-
-  cy.wait(300); // Let Alpine stabilize
+// Accordion expand command
+Cypress.Commands.add('expandAccordionInContainer', (label) => {
+  cy.get('div.max-w-3xl.mx-auto.divide-y.divide-gray-200')
+    .contains('span', label)
+    .closest('button')
+    .click({ force: true });
 });
