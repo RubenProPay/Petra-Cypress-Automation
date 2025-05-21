@@ -109,31 +109,35 @@ describe('Navigate to the Create Role page & create a role', () => {
     cy.contains('button', 'Save').should('be.visible').click();
     cy.wait(1000);
 
-    cy.togglePermissionInAccordion('Members', 'view');
-    cy.togglePermissionInAccordion('Members', 'edit');
-    cy.togglePermissionInAccordion('Members', 'create');
-    cy.togglePermissionInAccordion('Members', 'search');
+    // cy.togglePermissionInAccordion('Members', 'view');
+    // cy.togglePermissionInAccordion('Members', 'edit');
+    // cy.togglePermissionInAccordion('Members', 'create');
+    // cy.togglePermissionInAccordion('Members', 'search');
 
-    cy.togglePermissionInAccordion('Members-details', 'view');
-    cy.togglePermissionInAccordion('Members-details', 'edit');
+    // cy.togglePermissionInAccordion('Members-details', 'view');
+    // cy.togglePermissionInAccordion('Members-details', 'edit');
 
-    cy.togglePermissionInAccordion('Members-addresses', 'view');
-    cy.togglePermissionInAccordion('Members-addresses', 'edit');
+    // cy.togglePermissionInAccordion('Members-addresses', 'view');
+    // cy.togglePermissionInAccordion('Members-addresses', 'edit');
 
-    cy.togglePermissionInAccordion('Members-documents', 'view');
-    cy.togglePermissionInAccordion('Members-documents', 'create');
-    cy.togglePermissionInAccordion('Members-documents', 'delete');
+    // cy.togglePermissionInAccordion('Members-documents', 'view');
+    // cy.togglePermissionInAccordion('Members-documents', 'create');
+    // cy.togglePermissionInAccordion('Members-documents', 'delete');
 
-    cy.togglePermissionInAccordion('Members-audit', 'view');
+    // cy.togglePermissionInAccordion('Members-audit', 'view');
 
-    cy.togglePermissionInAccordion('Waiting-rooms', 'view');
-    cy.togglePermissionInAccordion('Waiting-rooms', 'edit');
+    // cy.togglePermissionInAccordion('Waiting-rooms', 'view');
+    // cy.togglePermissionInAccordion('Waiting-rooms', 'edit');
 
-    cy.togglePermissionInAccordion('Administration', 'view');
+    // cy.togglePermissionInAccordion('Administration', 'view');
 
-    cy.togglePermissionInAccordion('Branches', 'view');
-    cy.togglePermissionInAccordion('Branches', 'edit');
-    cy.togglePermissionInAccordion('Branches', 'create');
+    // cy.togglePermissionInAccordion('Branches', 'view');
+    // cy.togglePermissionInAccordion('Branches', 'edit');
+    // cy.togglePermissionInAccordion('Branches', 'create');
+
+    roleFixture.permissions.forEach(({ section, permission }) => {
+      cy.togglePermissionInAccordion(section, permission);
+    });
     
     cy.get('button')
           .contains('Save')
