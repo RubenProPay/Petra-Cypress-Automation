@@ -444,7 +444,4 @@ Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissi
         });
       });
     });
-
-  // Optional: wait to allow visual verification before collapsing or moving on
-  cy.wait(1000);
 });
