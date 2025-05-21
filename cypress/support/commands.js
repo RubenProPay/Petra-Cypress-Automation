@@ -356,31 +356,43 @@ Cypress.Commands.add('expandAccordionInContainer', (label) => {
 });
 
 // Toggle permission in accordion
-Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, permissionLabel) => {
+Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissions) => {
   cy.log(`Expanding accordion: ${accordionLabel}`);
+  
+  // Locate the specific accordion button
   cy.get('div.max-w-3xl.mx-auto.divide-y.divide-gray-200')
     .contains('span', accordionLabel)
     .closest('button')
+    .as('accordionButton')
     .click({ force: true });
 
-  // Wait for the permissions section to render
+  // Wait for animation/render (can be improved by using `.should(...)`)
   cy.wait(500);
 
-  // Now search within each permission section under the expanded accordion
-  cy.get('div.mt-4.grid.grid-cols-4.gap-6:visible')
-    .first()
-    .find('div.col-span-4, div.sm\\:col-span-1, div.lg\\:col-span-2')
-    .each(($el) => {
-      // Check if this section contains the right label
-      const label = $el.find('label').text().trim().toLowerCase();
-      if (label === permissionLabel.toLowerCase()) {
-        cy.wrap($el).find('input[type="checkbox"]').then(($checkbox) => {
-          if ($checkbox.prop('checked')) {
-            cy.wrap($checkbox).uncheck({ force: true });
-          } else {
-            cy.wrap($checkbox).check({ force: true });
+  // Scope to the expanded accordion container
+  cy.get('@accordionButton')
+    .parent() // Get the accordion container
+    .next()   // The content below the button
+    .within(() => {
+      // Loop over each permission provided
+      permissions.forEach(permissionLabel => {
+        cy.get('label').each(($label) => {
+          const labelText = $label.text().trim().toLowerCase();
+          if (labelText === permissionLabel.toLowerCase()) {
+            cy.wrap($label)
+              .invoke('attr', 'for')
+              .then((id) => {
+                cy.get(`#${id}`).then(($checkbox) => {
+                  if ($checkbox.prop('checked')) {
+                    cy.wrap($checkbox).uncheck({ force: true });
+                  } else {
+                    cy.wrap($checkbox).check({ force: true });
+                  }
+                });
+              });
           }
         });
-      }
+      });
     });
 });
+

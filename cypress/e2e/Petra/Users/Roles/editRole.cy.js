@@ -22,7 +22,8 @@ describe('Navigate to the Roles page & edit a role', () => {
     cy.wait(1000);
 
     cy.togglePermissionInAccordion('Members', 'View');
-    // cy.togglePermissionInAccordion('Members', 'Edit');
+    cy.togglePermissionInAccordion('Members', 'Edit');
+    cy.togglePermissionInAccordion('Members-details', 'View');  
     // cy.togglePermissionInAccordion('Members-addresses', 'View');
   });
 
