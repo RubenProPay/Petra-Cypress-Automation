@@ -358,15 +358,16 @@ Cypress.Commands.add('expandAccordionInContainer', (label) => {
 // Toggle permission in accordion
 Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissions) => {
   cy.log(`Expanding accordion: ${accordionLabel}`);
-  
+
   // Locate the specific accordion button
   cy.get('div.max-w-3xl.mx-auto.divide-y.divide-gray-200')
     .contains('span', accordionLabel)
     .closest('button')
     .as('accordionButton')
+    .scrollIntoView() // Ensure button is visible
     .click({ force: true });
 
-  // Wait for animation/render (can be improved by using `.should(...)`)
+  // Wait for animation/render
   cy.wait(500);
 
   // Scope to the expanded accordion container
@@ -380,18 +381,24 @@ Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissi
           const labelText = $label.text().trim().toLowerCase();
           if (labelText === permissionLabel.toLowerCase()) {
             cy.wrap($label)
+              .scrollIntoView() // Ensure label is visible before interaction
               .invoke('attr', 'for')
               .then((id) => {
-                cy.get(`#${id}`).then(($checkbox) => {
-                  if ($checkbox.prop('checked')) {
-                    cy.wrap($checkbox).uncheck({ force: true });
-                  } else {
-                    cy.wrap($checkbox).check({ force: true });
-                  }
-                });
+                cy.get(`#${id}`)
+                  .scrollIntoView() // Ensure checkbox is visible
+                  .then(($checkbox) => {
+                    if ($checkbox.prop('checked')) {
+                      cy.wrap($checkbox).uncheck({ force: true });
+                    } else {
+                      cy.wrap($checkbox).check({ force: true });
+                    }
+                  });
               });
           }
         });
       });
     });
+
+  // Optional: wait to allow visual verification before collapsing or moving on
+  cy.wait(1000);
 });
