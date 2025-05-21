@@ -395,4 +395,3 @@ Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissi
       });
     });
 });
-
