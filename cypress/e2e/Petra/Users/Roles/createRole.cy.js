@@ -17,7 +17,7 @@ describe('Navigate to the Create Role page & create a role', () => {
     cy.sideNav('Users', 'roles');
   });
 
-  it.skip('can verify ALL validations on the role creation', () => {
+  it('can verify ALL validations on the role creation', () => {
     cy.visit('/roles');
     cy.wait(1000);
     cy.contains('button', 'Create').should('be.visible').click();
