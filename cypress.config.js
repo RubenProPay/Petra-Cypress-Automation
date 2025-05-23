@@ -2,6 +2,7 @@ const { defineConfig } = require("cypress");
 const { faker } = require('@faker-js/faker');
 
 module.exports = defineConfig({
+  projectId: 'jkbuo6',
   e2e: {
     experimentalSessionAndOrigin: true, // <-- Add this line
     setupNodeEvents(on, config) {

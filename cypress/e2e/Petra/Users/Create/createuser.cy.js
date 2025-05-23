@@ -19,7 +19,7 @@ describe('Navigate to Create User Page & Create a User', () => {
     cy.sideNav('Users', 'users/user/create');
   });
 
-  it.skip('can verify ALL validations on the user creation', () => {
+  it('can verify ALL validations on the user creation', () => {
     cy.visit('users/user/create');
     cy.wait(1000);
     cy.contains('button', 'Submit').should('be.visible').click();

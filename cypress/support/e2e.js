@@ -17,18 +17,18 @@
 import './commands'
 
 Cypress.on('uncaught:exception', (err, runnable) => {
-    // Only ignore the specific Livewire error
-    // if (err.message.includes('Component already registered')) {
-    //   return false; // prevents test from failing
-    // }
- 
-    // if (err.message.includes('Component already initialized')) {
-    //   return false; // prevents test from failing
-    // }
- 
-    // if (err.message.includes('Uncaught Snapshot missing on Livewire component with id:')) {
-    //   return false; // prevents test from failing
-    // }
- 
-    return false
-  });
+  const livewireIgnoreList = [
+    'Component already registered',
+    'Component already initialized',
+    'Uncaught Snapshot missing on Livewire component with id:',
+    'Could not find Livewire component in DOM tree',
+    'areFiltersOpen is not defined',
+  ];
+
+  if (livewireIgnoreList.some(substring => err.message.includes(substring))) {
+    return false; // prevent Cypress from failing the test
+  }
+
+  // Let other errors fail the test
+  return true;
+});
