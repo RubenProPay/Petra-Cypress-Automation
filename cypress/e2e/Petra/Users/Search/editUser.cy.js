@@ -100,6 +100,21 @@ describe('Navigate to a User & edit', () => {
         .scrollIntoView()
         .should('be.visible')
         .click({ force: true });
+      cy.wait(1000);
+
+      cy.contains('Avatar')
+        .parents('div') // walk up the tree
+        .find('button')
+        .contains('Restore Default')
+        .scrollIntoView()
+        .should('be.visible')
+        .click({ force: true });
+      cy.wait(1000);
+      
+      cy.contains('button', 'Yes, Delete!')
+        .should('be.visible')
+        .click({ force: true });
+
     });
   });
   
