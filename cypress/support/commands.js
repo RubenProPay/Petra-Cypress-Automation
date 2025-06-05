@@ -1,4 +1,5 @@
 import 'cypress-xpath';
+import 'cypress-file-upload';
 
 // Logs in as root user
 Cypress.Commands.add("loginRoot", () => {
