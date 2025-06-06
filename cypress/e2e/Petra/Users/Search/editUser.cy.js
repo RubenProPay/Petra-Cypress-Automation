@@ -17,7 +17,7 @@ describe('Navigate to a User & edit', () => {
 
       cy.wait(1000);
 
-      cy.contains('td', 'cypresstestuser@propay.com')
+      cy.contains('td', '@cypresstest.com')
       .parents('tr')
       .within(() => {
         cy.get('button').first().click(); // Click the action menu
@@ -58,15 +58,19 @@ describe('Navigate to a User & edit', () => {
       cy.get('input[type="file"][accept="image/*"]') // Targets FilePond input
         .should('exist')
       .attachFile('ProfilePhoto.jpg');
-      cy.wait(10000);
+      cy.wait(5000);
 
       cy.contains('Avatar')
-        .parents('div') // walk up the tree
-        .find('button')
-        .contains('Save')
-        .scrollIntoView()
-        .should('be.visible')
-        .click({ force: true });
+        .parentsUntil('form')      // walks up until it hits the <form> tag
+        .parent()                  // land on the actual container
+        .first()                   // ensures it's ONE element
+        .within(() => {
+          cy.contains('button', 'Save')
+            .scrollIntoView()
+            .should('be.visible')
+            .click({ force: true });
+      });
+      cy.wait(2000);
 
       // cy.contains('a', 'Permissions').click();    
     
@@ -83,6 +87,8 @@ describe('Navigate to a User & edit', () => {
       //   .should('be.visible')
       //   .click({ force: true });
 
+      cy.wait(1000);  
+      
       cy.contains('a', 'Personal Details').click();
       cy.wait(1000);
 
@@ -92,7 +98,7 @@ describe('Navigate to a User & edit', () => {
       cy.get('input[id="surname"]').should('be.visible').clear().type('CypressTestUser');
       cy.wait(1000);
 
-      cy.get('input[id="email"]').should('be.visible').clear().type('cypresstestuser@propay.com');
+      cy.get('input[id="email"]').should('be.visible').clear().type('cypresstestuser@cypresstest.com');
       cy.wait(1000);
 
       cy.get('button:contains("Save")')
@@ -110,7 +116,7 @@ describe('Navigate to a User & edit', () => {
         .should('be.visible')
         .click({ force: true });
       cy.wait(1000);
-      
+
       cy.contains('button', 'Yes, Delete!')
         .should('be.visible')
         .click({ force: true });
