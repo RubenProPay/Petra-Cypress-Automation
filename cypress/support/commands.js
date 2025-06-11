@@ -381,7 +381,7 @@ Cypress.Commands.add('generateRoleFixture', () => {
 
   // Loop through each section and randomly pick some permissions
   Object.entries(permissionMap).forEach(([section, perms]) => {
-    const selectedPerms = perms.filter(() => Math.random() < 0.3); // ~30% chance to include each permission
+    const selectedPerms = perms.filter(() => Math.random() < 0.3);
     selectedPerms.forEach(permission => {
       roleFixture.permissions.push({ section, permission });
     });
@@ -406,7 +406,6 @@ Cypress.Commands.add('expandAccordionInContainer', (label) => {
 Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissions) => {
   cy.log(`Expanding accordion: ${accordionLabel}`);
 
-  // Locate the specific accordion button
   cy.get('div.max-w-3xl.mx-auto.divide-y.divide-gray-200')
     .contains('span', accordionLabel)
     .closest('button')
@@ -414,25 +413,23 @@ Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissi
     .scrollIntoView() // Ensure button is visible
     .click({ force: true });
 
-  // Wait for animation/render
   cy.wait(500);
 
   // Scope to the expanded accordion container
   cy.get('@accordionButton')
-    .parent() // Get the accordion container
-    .next()   // The content below the button
+    .parent() 
+    .next()   
     .within(() => {
-      // Loop over each permission provided
       permissions.forEach(permissionLabel => {
         cy.get('label').each(($label) => {
           const labelText = $label.text().trim().toLowerCase();
           if (labelText === permissionLabel.toLowerCase()) {
             cy.wrap($label)
-              .scrollIntoView() // Ensure label is visible before interaction
+              .scrollIntoView() 
               .invoke('attr', 'for')
               .then((id) => {
                 cy.get(`#${id}`)
-                  .scrollIntoView() // Ensure checkbox is visible
+                  .scrollIntoView() 
                   .then(($checkbox) => {
                     if ($checkbox.prop('checked')) {
                       cy.wrap($checkbox).uncheck({ force: true });

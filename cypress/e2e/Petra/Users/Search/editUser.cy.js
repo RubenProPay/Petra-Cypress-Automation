@@ -20,10 +20,10 @@ describe('Navigate to a User & edit', () => {
       cy.contains('td', '@cypresstest.com')
       .parents('tr')
       .within(() => {
-        cy.get('button').first().click(); // Click the action menu
+        cy.get('button').first().click(); 
       });
     
-      cy.contains('button', 'Edit').click(); // Click "Edit"
+      cy.contains('button', 'Edit').click(); 
       cy.wait(1000);
 
       cy.contains('a', 'Personal Details').should('be.visible');
@@ -55,15 +55,15 @@ describe('Navigate to a User & edit', () => {
         .click({ force: true });
 
       cy.contains('Avatar').should('be.visible');
-      cy.get('input[type="file"][accept="image/*"]') // Targets FilePond input
+      cy.get('input[type="file"][accept="image/*"]')
         .should('exist')
       .attachFile('ProfilePhoto.jpg');
       cy.wait(5000);
 
       cy.contains('Avatar')
-        .parentsUntil('form')      // walks up until it hits the <form> tag
-        .parent()                  // land on the actual container
-        .first()                   // ensures it's ONE element
+        .parentsUntil('form')     
+        .parent()                  
+        .first()                   
         .within(() => {
           cy.contains('button', 'Save')
             .scrollIntoView()
@@ -72,20 +72,20 @@ describe('Navigate to a User & edit', () => {
       });
       cy.wait(2000);
 
-      // cy.contains('a', 'Permissions').click();    
+      cy.contains('a', 'Permissions').click();    
     
-      // cy.fixture('editrole').then((roleFixture) => {
-      //   roleFixture.permissions.forEach(({ section, permission }) => {
-      //    cy.togglePermissionInAccordion(section, permission);
-      //   });
-      // });
-      // cy.wait(1000);
+      cy.fixture('editrole').then((roleFixture) => {
+        roleFixture.permissions.forEach(({ section, permission }) => {
+         cy.togglePermissionInAccordion(section, permission);
+        });
+      });
+      cy.wait(1000);
 
-      // cy.get('button:contains("Save")')
-      //   .last()
-      //   .scrollIntoView()
-      //   .should('be.visible')
-      //   .click({ force: true });
+      cy.get('button:contains("Save")')
+        .last()
+        .scrollIntoView()
+        .should('be.visible')
+        .click({ force: true });
 
       cy.wait(1000);  
       
@@ -109,7 +109,7 @@ describe('Navigate to a User & edit', () => {
       cy.wait(1000);
 
       cy.contains('Avatar')
-        .parents('div') // walk up the tree
+        .parents('div')
         .find('button')
         .contains('Restore Default')
         .scrollIntoView()
