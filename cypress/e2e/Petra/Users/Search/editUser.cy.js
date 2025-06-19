@@ -1,3 +1,13 @@
+let userFixture;
+let currentLanguage;
+
+before(() => {
+  cy.fixture('user').then((user) => {
+    userFixture = user;
+    currentLanguage = user.language; // Track the current language
+  });
+});
+
 describe('Navigate to a User & edit', () => {
     beforeEach(() => {
       cy.loginRoot();
@@ -29,7 +39,7 @@ describe('Navigate to a User & edit', () => {
       cy.contains('a', 'Personal Details').should('be.visible');
       cy.wait(1000);
 
-      cy.get('input[id="name"]').should('be.visible').clear().type('Hello Cypress');
+      cy.get('input[id="name"]').should('be.visible').clear().type('Hello');
       cy.wait(1000);
 
       cy.get('input[id="surname"]').should('be.visible').clear().type('World');
@@ -47,6 +57,14 @@ describe('Navigate to a User & edit', () => {
         cy.get('input[id="cell"]').should('be.visible').clear().type(generatedSACellphone);
       });
       cy.wait(1000);
+
+      cy.dropdown('status_id', 'Status', 'Frozen', { clear: true });
+      cy.wait(1000);
+
+      const oppositeLanguage1 = currentLanguage === 'English' ? 'Afrikaans' : 'English';
+      cy.dropdown('language_id', 'Language', oppositeLanguage1, { clear: true });
+      cy.wait(1000);
+      currentLanguage = oppositeLanguage1; // Update after swap
 
       cy.get('button:contains("Save")')
         .first()
@@ -71,6 +89,9 @@ describe('Navigate to a User & edit', () => {
             .click({ force: true });
       });
       cy.wait(2000);
+
+      cy.contains('a', 'Security').click();
+      cy.wait(10000);
 
       cy.contains('a', 'Permissions').click();    
     
@@ -101,6 +122,14 @@ describe('Navigate to a User & edit', () => {
       cy.get('input[id="email"]').should('be.visible').clear().type('cypresstestuser@cypresstest.com');
       cy.wait(1000);
 
+      cy.dropdown('status_id', 'Status', 'Active', { clear: true });
+      cy.wait(1000);
+
+      const oppositeLanguage2 = currentLanguage === 'English' ? 'Afrikaans' : 'English';
+      cy.dropdown('language_id', 'Language', oppositeLanguage2, { clear: true });
+      cy.wait(1000);
+      currentLanguage = oppositeLanguage2; // Update after swap
+
       cy.get('button:contains("Save")')
         .first()
         .scrollIntoView()
@@ -123,4 +152,3 @@ describe('Navigate to a User & edit', () => {
 
     });
   });
-  
