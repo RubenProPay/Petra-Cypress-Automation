@@ -66,6 +66,11 @@ describe('Navigate to a User & edit', () => {
       cy.wait(1000);
       currentLanguage = oppositeLanguage1; // Update after swap
 
+      cy.generateUserFixture().then((newUserFixture) => {
+      cy.selectCallCenterAndProvinces(newUserFixture);
+      cy.wait(1000);
+      });
+
       cy.get('button:contains("Save")')
         .first()
         .scrollIntoView()
