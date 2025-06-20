@@ -91,7 +91,15 @@ describe('Navigate to a User & edit', () => {
       cy.wait(2000);
 
       cy.contains('a', 'Security').click();
-      cy.wait(10000);
+      cy.contains('button', 'Log Out Other Browser Sessions').should('be.visible').click({ force: true });
+      cy.get('input[name="password"]').type('ElongatedMango1103');
+      cy.wait(500);
+      cy.get('button:contains("Save")')
+        .last()
+        .should('be.visible')
+        .click({ force: true });
+
+      cy.wait(1000);
 
       cy.contains('a', 'Permissions').click();    
     
