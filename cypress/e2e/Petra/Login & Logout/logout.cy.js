@@ -20,7 +20,7 @@ describe('Petra Logout', () => {
     cy.get('button[type="submit"]').first().click({ force: true });
     cy.wait(1000);
 
-    cy.contains('button', 'Cypress Automation').click();
+    cy.contains('button', 'CypressAutomation').click();
     cy.log('Clicked button');
     cy.wait(1000);
 

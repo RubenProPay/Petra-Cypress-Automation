@@ -165,7 +165,7 @@ Cypress.Commands.add('generateUserFixture', () => {
     'Gauteng Call Centre': 'Gauteng',
     'Kwazulu-Natal Call Centre': 'KwaZulu-Natal',
     'Limpopo Call Centre': 'Limpopo',
-    'Mpumalanga Call Centre': 'Mpumalanga',
+    'Mpumalanga Call Center': 'Mpumalanga',
     'Northern Cape Call Centre': 'Northern Cape',
     'North West Call Centre': 'North West',
     'Western Cape Call Centre': 'Western Cape',
