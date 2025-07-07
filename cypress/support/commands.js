@@ -443,3 +443,155 @@ Cypress.Commands.add('togglePermissionInAccordion', (accordionLabel, ...permissi
       });
     });
 });
+
+Cypress.Commands.add('collectTableHeaders', () => {
+  let headers = [];
+  return cy.get('th[class*="fi-ta-header-cell"]')
+    .each(($el) => {
+      const text = $el.text().trim();
+      if (text) headers.push(text);
+    })
+    .then(() => headers);
+});
+
+Cypress.Commands.add('toggleAllColumns', () => {
+  cy.get('button[title="Toggle columns"]').click();
+  cy.wait(500);
+
+  // Uncheck all checkboxes
+  cy.get('label[for] input[type="checkbox"]').each(($checkbox) => {
+    cy.wait(300);
+    if ($checkbox.prop('checked')) {
+      cy.wrap($checkbox).click({ force: true });
+    }
+  });
+
+  cy.wait(500);
+  cy.get('body').click(0, 0); // Close menu
+  cy.wait(500);
+
+  // Reopen and re-check all checkboxes
+  cy.get('button[title="Toggle columns"]').click();
+  cy.wait(500);
+  cy.get('label[for] input[type="checkbox"]').each(($checkbox) => {
+    cy.wait(300);
+    if (!$checkbox.prop('checked')) {
+      cy.wrap($checkbox).click({ force: true });
+    }
+  });
+});
+
+Cypress.Commands.add('verifyAllColumnsVisible', (headers) => {
+  headers.forEach((headerText) => {
+    cy.contains('th', headerText).should('exist');
+  });
+});
+
+Cypress.Commands.add('sortAndVerifyAllColumns', () => {
+  const columnsToSkipByName = ['Progress'];
+  let headers = [];
+
+  const getColumnValues = (colIndex) => {
+    return cy.get('tbody tr')
+      .not(':first')
+      .filter(':visible')
+      .then($rows => {
+        return [...$rows].map(row => {
+          const cell = row.querySelectorAll('td')[colIndex];
+          return cell?.innerText.trim() || '';
+        });
+      });
+  };
+
+  const inferType = (values) => {
+    return values.every(v => !isNaN(parseFloat(v))) ? 'numeric' : 'text';
+  };
+
+  const sortColumnAndVerify = (colIndex, columnName) => {
+    return getColumnValues(colIndex).then(initialValues => {
+      const type = inferType(initialValues);
+
+      const sortAsc = () => {
+        cy.get(`th[class*="fi-ta-header-cell"]`).eq(colIndex).click();
+        cy.wait(1000);
+        return getColumnValues(colIndex).then(values => {
+          const expected = [...values].sort((a, b) =>
+            type === 'numeric' ? parseFloat(a) - parseFloat(b) : a.localeCompare(b)
+          );
+          expect(values).to.deep.equal(expected);
+        });
+      };
+
+      const sortDesc = () => {
+        cy.get(`th[class*="fi-ta-header-cell"]`).eq(colIndex).click();
+        cy.wait(1000);
+        return getColumnValues(colIndex).then(values => {
+          const expected = [...values].sort((a, b) =>
+            type === 'numeric' ? parseFloat(b) - parseFloat(a) : b.localeCompare(a)
+          );
+          expect(values).to.deep.equal(expected);
+        });
+      };
+
+      return sortAsc().then(sortDesc);
+    });
+  };
+
+  cy.get('th[class*="fi-ta-header-cell"]')
+    .each($el => {
+      const text = $el.text().trim();
+      if (text) headers.push(text);
+    })
+    .then(() => {
+      headers.forEach((header, index) => {
+        if (!columnsToSkipByName.includes(header)) {
+          sortColumnAndVerify(index, header);
+        }
+      });
+    });
+});
+
+Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
+  const options = ['10', '25', '50', '100'];
+  const cycle = [...options, ...options.slice(0, -1).reverse()]; // 10,25,50,100,50,25,10
+
+  cy.get('div.fi-input-wrp')
+    .contains('span', 'Per page')
+    .closest('div.fi-input-wrp')
+    .find('select')
+    .scrollIntoView()
+    .should('be.visible')
+    .then($select => {
+      cycle.forEach(option => {
+        cy.wrap($select)
+          .select(option)
+          .should('have.value', option);
+        cy.wait(waitTime);
+      });
+    });
+});
+
+Cypress.Commands.add('clickAllPaginationPages', () => {
+  function clickNextIfExists() {
+    cy.get('ol.fi-pagination-items')
+      .then($pagination => {
+        const nextButton = $pagination.find('li[rel="next"] button');
+        if (nextButton.length) {
+          cy.wrap(nextButton)
+            .should('be.visible')
+            .scrollIntoView()
+            .click({ force: true })
+            .wait(500)
+            .then(() => {
+              // Recursive check again after the click
+              clickNextIfExists();
+            });
+        } else {
+          cy.log('No more pages.');
+        }
+      });
+  }
+
+  clickNextIfExists();
+});
+
