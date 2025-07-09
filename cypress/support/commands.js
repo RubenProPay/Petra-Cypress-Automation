@@ -581,7 +581,7 @@ Cypress.Commands.add('clickAllPaginationPages', () => {
             .should('be.visible')
             .scrollIntoView()
             .click({ force: true })
-            .wait(500)
+            .wait(1000)
             .then(() => {
               // Recursive check again after the click
               clickNextIfExists();

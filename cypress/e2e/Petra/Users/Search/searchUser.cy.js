@@ -6,7 +6,7 @@ describe('Navigate to User table and test search + columns', () => {
     cy.wait(1000);
   });
 
-  it.skip('Searches for a user', () => {
+  it('Searches for a user', () => {
     cy.visit("/");
     cy.sideNav('Users', 'users/user');
 
@@ -18,7 +18,7 @@ describe('Navigate to User table and test search + columns', () => {
     cy.wait(1000);
   });
 
-  it.skip('Column Show/Hide', () => {
+  it('Column Show/Hide', () => {
     cy.visit('/users/user');
 
     cy.collectTableHeaders().then((headers) => {
@@ -35,7 +35,7 @@ describe('Navigate to User table and test search + columns', () => {
     });
   });
 
-  it.skip('Sorts all columns ascending and descending', () => {
+  it('Sorts all columns ascending and descending', () => {
     cy.visit('/users/user');
     cy.sortAndVerifyAllColumns(columnsToSkipByName);
   });
