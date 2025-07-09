@@ -6,7 +6,7 @@ describe('Navigate to user table and impersonate a user', () => {
     cy.wait(1000);
   });
 
-  it('Searches for a user', () => {
+  it('Searches for a user & impersonates', () => {
     cy.visit('/');
     cy.sideNav('Users', 'users/user');
 
@@ -27,7 +27,7 @@ describe('Navigate to user table and impersonate a user', () => {
       .should('be.visible')
       .click();
 
-    cy.wait(1000);
+    cy.wait(2000);
 
     cy.contains('p', 'CypressTestUser CypressTestUser')
         .should('be.visible')
