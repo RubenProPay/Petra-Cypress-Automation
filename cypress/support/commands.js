@@ -73,6 +73,16 @@ Cypress.Commands.add('ensureModuleChecked', (moduleName) => {
     });
 });
 
+// Module edit icon
+Cypress.Commands.add('clickModuleEditIcon', (moduleName) => {
+  cy.contains('div.relative.flex.items-start.group', moduleName)
+    .should('exist')
+    .within(() => {
+      cy.get('svg[id$="_pencil"]') // matches any ID ending in _pencil
+        .click({ force: true }); // override hidden state if needed
+    });
+});
+
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const fullItemText = item;
