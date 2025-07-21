@@ -37,6 +37,12 @@ describe('VF+ PRD Login', () => {
     cy.ensureModuleChecked('Waiting Room');
     cy.wait(500);
 
+    cy.contains('button', 'Save').should('be.visible').click();
+    cy.wait(1000);
+
+    cy.clickModuleEditIcon('Members');
+    cy.wait(500);
+
   });
 
 });
