@@ -42,6 +42,37 @@ Cypress.Commands.add('sideNav', (module, page) => {
   cy.url().should('eq', Cypress.config().baseUrl + page);
 });
 
+Cypress.Commands.add('sideNavPrd', (module, page) => {
+  cy.contains('span', module)
+    .parents('button')
+    .click({ force: true });
+
+  const isAbsoluteUrl = page.startsWith('http');
+  const targetHref = isAbsoluteUrl ? page : Cypress.config().baseUrl + page;
+
+  console.log('Navigating to href:', targetHref);
+
+  cy.get(`a[href="${targetHref}"]`)
+    .last()
+    .should('be.visible')
+    .click();
+
+  cy.url().should('eq', targetHref);
+});
+
+// Module preferences
+Cypress.Commands.add('ensureModuleChecked', (moduleName) => {
+  cy.contains('div.relative.flex.items-start.group', moduleName, { timeout: 10000 }) // find the outer wrapper that contains the module name
+    .should('exist')
+    .within(() => {
+      cy.get('input[type="checkbox"]').then($checkbox => {
+        if (!$checkbox.is(':checked')) {
+          cy.wrap($checkbox).click({ force: true }); // check it only if not already checked
+        }
+      });
+    });
+});
+
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const fullItemText = item;
