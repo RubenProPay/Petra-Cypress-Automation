@@ -83,6 +83,19 @@ Cypress.Commands.add('clickModuleEditIcon', (moduleName) => {
     });
 });
 
+Cypress.Commands.add('ensureMemberTypesCheckboxChecked', () => {
+  cy.contains('label', 'Enable roles for the following member types:')
+    .should('exist')
+    .parents('div.relative.flex.items-start')
+    .within(() => {
+      cy.get('input[type="checkbox"]').then($checkbox => {
+        if (!$checkbox.is(':checked')) {
+          cy.wrap($checkbox).check({ force: true });
+        }
+      });
+    });
+});
+
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const fullItemText = item;

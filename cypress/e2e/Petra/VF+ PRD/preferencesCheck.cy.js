@@ -6,7 +6,8 @@ describe('VF+ PRD Login', () => {
       body: { success: true },
     }).as('cloudflareChallenge');
 
-    cy.visit('https://vfplus.datakrag.co.za/');
+    // cy.visit('https://vfplus.datakrag.co.za/');
+    cy.visit('/')
 
     cy.wait('@cloudflareChallenge');
 
@@ -20,7 +21,8 @@ describe('VF+ PRD Login', () => {
     cy.get('button[type="submit"]').first().click({ force: true });
     cy.wait(1000);
 
-    cy.sideNavPrd('Administration', 'https://vfplus.datakrag.co.za/global');
+    // cy.sideNavPrd('Administration', 'https://vfplus.datakrag.co.za/global');
+    cy.sideNavPrd('Administration', 'global');
     cy.wait(1000);
 
     cy.contains('a', 'Modules')
@@ -29,19 +31,24 @@ describe('VF+ PRD Login', () => {
     cy.wait(1000);
 
     cy.ensureModuleChecked('Members');
-    cy.wait(500);
-
-    cy.ensureModuleChecked('Voters Role');
-    cy.wait(500);
-
-    cy.ensureModuleChecked('Waiting Room');
-    cy.wait(500);
-
-    cy.contains('button', 'Save').should('be.visible').click();
     cy.wait(1000);
 
+    cy.ensureModuleChecked('Voters Role');
+    cy.wait(1000);
+
+    cy.ensureModuleChecked('Waiting Room');
+    cy.wait(1000);
+
+    cy.contains('button', 'Save').should('be.visible').click();
+    cy.wait(2000);
+
     cy.clickModuleEditIcon('Members');
-    cy.wait(500);
+    cy.wait(1000);
+
+    cy.ensureMemberTypesCheckboxChecked();
+    cy.wait(1000);
+
+    
 
   });
 
