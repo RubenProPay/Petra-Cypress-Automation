@@ -13,7 +13,8 @@
 node_modules/
 1-getting-started/
 2-advanced-examples/
-user.json
+cypress/fixtures/user.json
+cypress/fixtures/role.json
 
 # Editor-specific and OS-specific files
 .vscode/
@@ -23,3 +24,4 @@ Thumbs.db
 # Logs and environments
 *.log
 .env
+cypress/downloads/downloads.htm

@@ -12,16 +12,16 @@ describe('Petra Logout', () => {
 
     cy.url().should('include', '/login');
 
-    cy.get('input[name="email"]').type('ruben.dasilva@propaysystems.com');
-    cy.get('input[name="email"]').should('have.value', 'ruben.dasilva@propaysystems.com');
+    cy.get('input[name="email"]').type('propaycypressautomation@gmail.com');
+    cy.get('input[name="email"]').should('have.value', 'propaycypressautomation@gmail.com');
     cy.wait(1000);
 
-    cy.get('input[name="password"]').type('Prop@y');
+    cy.get('input[name="password"]').type('ElongatedMango1103');
     cy.get('button[type="submit"]').first().click({ force: true });
     cy.wait(1000);
 
-    cy.contains('button', 'Ruben Da Silva').click();
-    cy.log('Clicked Ruben Da Silva button');
+    cy.contains('button', 'CypressAutomation').click();
+    cy.log('Clicked button');
     cy.wait(1000);
 
     cy.get('.soft-scrollbar').should('be.visible');

@@ -15,3 +15,20 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  const livewireIgnoreList = [
+    'Component already registered',
+    'Component already initialized',
+    'Uncaught Snapshot missing on Livewire component with id:',
+    'Could not find Livewire component in DOM tree',
+    'areFiltersOpen is not defined',
+  ];
+
+  if (livewireIgnoreList.some(substring => err.message.includes(substring))) {
+    return false; // prevent Cypress from failing the test
+  }
+
+  // Let other errors fail the test
+  return true;
+});

@@ -1,0 +1,29 @@
+{
+  "permissions": [
+    { "section": "Members", "permission": "view" },
+    { "section": "Members", "permission": "edit" },
+    { "section": "Members", "permission": "create" },
+    { "section": "Members", "permission": "search" },
+
+    { "section": "Members-details", "permission": "view" },
+    { "section": "Members-details", "permission": "edit" },
+
+    { "section": "Members-addresses", "permission": "view" },
+    { "section": "Members-addresses", "permission": "edit" },
+
+    { "section": "Members-documents", "permission": "view" },
+    { "section": "Members-documents", "permission": "create" },
+    { "section": "Members-documents", "permission": "delete" },
+
+    { "section": "Members-audit", "permission": "view" },
+
+    { "section": "Waiting-rooms", "permission": "view" },
+    { "section": "Waiting-rooms", "permission": "edit" },
+
+    { "section": "Administration", "permission": "view" },
+
+    { "section": "Branches", "permission": "view" },
+    { "section": "Branches", "permission": "edit" },
+    { "section": "Branches", "permission": "create" }
+  ]
+}
