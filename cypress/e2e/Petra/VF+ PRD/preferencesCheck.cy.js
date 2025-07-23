@@ -47,8 +47,8 @@ describe('VF+ PRD Login', () => {
 
     cy.ensureMemberTypesCheckboxChecked();
     cy.wait(1000);
-
     
+    // hello world
 
   });
 
