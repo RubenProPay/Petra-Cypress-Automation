@@ -33,6 +33,9 @@ describe('VF+ PRD Login', () => {
     cy.ensureModuleChecked('Members');
     cy.wait(1000);
 
+    cy.ensureModuleChecked('Reports');
+    cy.wait(1000);
+
     cy.ensureModuleChecked('Voters Role');
     cy.wait(1000);
 
@@ -44,12 +47,20 @@ describe('VF+ PRD Login', () => {
 
     cy.clickModuleEditIcon('Members');
     cy.wait(1000);
-
     cy.ensureMemberTypesCheckboxChecked();
     cy.wait(1000);
-    
-    // hello world
+    cy.clickLastSaveButton();
+    cy.wait(1000);
 
+    cy.clickModuleEditIcon('Voters Role');
+    cy.wait(1000);
+    cy.clickLastSaveButton();
+    cy.wait(1000);
+
+    cy.clickModuleEditIcon('Waiting Room');
+    cy.wait(1000);
+    cy.clickLastSaveButton();
+    cy.wait(1000);
   });
 
 });

@@ -96,6 +96,17 @@ Cypress.Commands.add('ensureMemberTypesCheckboxChecked', () => {
     });
 });
 
+Cypress.Commands.add('clickLastSaveButton', () => {
+  cy.get('div.border-t.rounded-b-md')
+    .last()
+    .should('be.visible')
+    .within(() => {
+      cy.contains('button', 'Save')
+        .should('be.visible')
+        .click({ force: true });
+    });
+});
+
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const fullItemText = item;
