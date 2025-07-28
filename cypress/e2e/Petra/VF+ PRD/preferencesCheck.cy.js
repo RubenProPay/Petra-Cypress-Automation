@@ -1,5 +1,5 @@
-describe('VF+ PRD Login', () => {
-  it('logs onto VF+ PRD site', () => {
+describe('VF+ PRD Preferences Check', () => {
+  it('checks preferences on VF+ PRD site', () => {
     // Intercept the Cloudflare challenge request and mock a successful response
     cy.intercept('GET', 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/**', {
       statusCode: 200,
@@ -44,6 +44,8 @@ describe('VF+ PRD Login', () => {
 
     cy.contains('button', 'Save').should('be.visible').click();
     cy.wait(2000);
+
+    // from the bottom onwards this should be a new "it" test case 
 
     cy.clickModuleEditIcon('Members');
     cy.wait(1000);
