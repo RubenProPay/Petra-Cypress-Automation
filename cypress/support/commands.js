@@ -136,6 +136,43 @@ Cypress.Commands.add('ensureWaitingRoomCheckboxChecked', () => {
   });
 });
 
+Cypress.Commands.add('selectActiveMemberType', () => {
+  cy.contains('label', 'Member Types')
+    .should('have.attr', 'for')
+    .then((forAttr) => {
+      cy.contains('label', 'Member Types').click({ force: true });
+      cy.wait(500);
+
+      cy.get(`#${forAttr}`)
+        .parents('div.relative')
+        .find('div.wrapper-append-slot button')
+        .then(($buttons) => {
+          const clearButton = $buttons[0];
+          if (clearButton) {
+            cy.wrap(clearButton).invoke('show').click({ force: true });
+            cy.wait(500);
+          }
+        });
+
+      cy.contains('label', 'Member Types').click({ force: true });
+      cy.wait(500);
+
+      cy.get('ul[role="listbox"]:visible, ul:visible, .max-h-80:visible')
+        .first()
+        .should('be.visible')
+        .within(() => {
+          cy.contains('div', 'Active Member')
+            .should('be.visible')
+            .scrollIntoView()
+            .click({ force: true });
+        });
+
+      cy.wait(500);
+      cy.contains('label', 'Member Types').click({ force: true });
+      cy.wait(500);
+    });
+});
+
 Cypress.Commands.add('clickLastSaveButton', () => {
   cy.get('div.border-t.rounded-b-md')
     .last()
