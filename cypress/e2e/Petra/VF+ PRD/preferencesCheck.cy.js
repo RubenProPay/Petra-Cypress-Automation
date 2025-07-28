@@ -49,6 +49,7 @@ describe('VF+ PRD Login', () => {
     cy.wait(1000);
     cy.ensureMemberTypesCheckboxChecked();
     cy.wait(1000);
+    // add in here that the multi-select dropdown is cleared, clicks on it and searches for "Active Member"
     cy.clickLastSaveButton();
     cy.wait(1000);
 
@@ -60,6 +61,8 @@ describe('VF+ PRD Login', () => {
     cy.wait(1000);
 
     cy.clickModuleEditIcon('Waiting Room');
+    cy.wait(1000);
+    cy.ensureWaitingRoomCheckboxChecked();
     cy.wait(1000);
     cy.clickLastSaveButton();
     cy.wait(1000);

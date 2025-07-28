@@ -116,6 +116,26 @@ Cypress.Commands.add('ensureVotersRollCheckboxChecked', () => {
   });
 });
 
+Cypress.Commands.add('ensureWaitingRoomCheckboxChecked', () => {
+  const labels = [
+    'Waiting room button layout',
+    'Enable Member must be linked to a branch'
+  ];
+
+  labels.forEach(label => {
+    cy.contains('label', label)
+      .should('exist')
+      .parents('div.relative.flex.items-start')
+      .within(() => {
+        cy.get('input[type="checkbox"]').then($checkbox => {
+          if (!$checkbox.is(':checked')) {
+            cy.wrap($checkbox).check({ force: true });
+          }
+        });
+      });
+  });
+});
+
 Cypress.Commands.add('clickLastSaveButton', () => {
   cy.get('div.border-t.rounded-b-md')
     .last()
