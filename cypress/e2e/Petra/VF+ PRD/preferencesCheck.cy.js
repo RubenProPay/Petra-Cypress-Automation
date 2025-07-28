@@ -1,20 +1,7 @@
 describe('VF+ PRD Preferences Check', () => {
   beforeEach(() => {
-    cy.intercept(
-      'GET',
-      'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/**',
-      {
-        statusCode: 200,
-        body: { success: true },
-      }
-    ).as('cloudflareChallenge');
-
-    cy.visit('/');
-    cy.wait('@cloudflareChallenge');
-    cy.url().should('include', '/login');
-    cy.get('input[name="email"]').type('ruben.dasilva@propaysystems.com');
-    cy.get('input[name="password"]').type('YWZNxJepZPd7kiq!');
-    cy.get('button[type="submit"]').first().click({ force: true });
+    cy.loginRoot();
+    cy.visit('/'); // Ensure you are on the home/dashboard page after session restore
     cy.wait(1000);
   });
 
