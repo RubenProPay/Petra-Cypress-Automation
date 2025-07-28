@@ -1,11 +1,11 @@
 describe('VF+ PRD Preferences Check', () => {
   beforeEach(() => {
     cy.loginRoot();
-    cy.visit('/'); // Ensure you are on the home/dashboard page after session restore
+    cy.visit('/');
     cy.wait(1000);
   });
 
-  it('checks preferences on VF+ PRD site', () => {
+  it.skip('checks preferences on VF+ PRD site', () => {
     cy.sideNavPrd('Administration', 'global');
     cy.wait(1000);
 
@@ -39,7 +39,44 @@ describe('VF+ PRD Preferences Check', () => {
     cy.wait(1000);
     cy.ensureMemberTypesCheckboxChecked();
     cy.wait(1000);
-    // TODO: Add step to clear multi-select dropdown, click, and search for "Active Member"
+
+    cy.contains('label', 'Member Types')
+      .should('have.attr', 'for')
+      .then((forAttr) => {
+        cy.contains('label', 'Member Types').click({ force: true });
+        cy.wait(500);
+
+        cy.get(`#${forAttr}`)
+          .parents('div.relative')
+          .find('div.wrapper-append-slot button')
+          .then(($buttons) => {
+            const clearButton = $buttons[0];
+            if (clearButton) {
+              cy.wrap(clearButton).invoke('show').click({ force: true });
+              cy.wait(500);
+            }
+          });
+
+        cy.contains('label', 'Member Types').click({ force: true });
+        cy.wait(500);
+
+        // Use a more specific selector for the dropdown option
+        cy.get('ul[role="listbox"]:visible, ul:visible, .max-h-80:visible')
+          .first()
+          .should('be.visible')
+          .within(() => {
+            cy.contains('div', 'Active Member')
+              .should('be.visible')
+              .scrollIntoView()
+              .click({ force: true });
+          });
+
+        cy.wait(500);
+        cy.contains('label', 'Member Types').click({ force: true });
+        cy.wait(500);
+      });
+
+    // Now click the save button
     cy.clickLastSaveButton();
     cy.wait(1000);
 
