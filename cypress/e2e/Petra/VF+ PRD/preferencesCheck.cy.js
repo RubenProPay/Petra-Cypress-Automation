@@ -54,6 +54,8 @@ describe('VF+ PRD Login', () => {
 
     cy.clickModuleEditIcon('Voters Role');
     cy.wait(1000);
+    cy.ensureVotersRollCheckboxChecked();
+    cy.wait(1000);
     cy.clickLastSaveButton();
     cy.wait(1000);
 

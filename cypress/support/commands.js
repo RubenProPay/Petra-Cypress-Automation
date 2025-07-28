@@ -96,6 +96,26 @@ Cypress.Commands.add('ensureMemberTypesCheckboxChecked', () => {
     });
 });
 
+Cypress.Commands.add('ensureVotersRollCheckboxChecked', () => {
+  const labels = [
+    'Verify Member Before Create',
+    'Edit IEC Voter Information on Voters Roll'
+  ];
+
+  labels.forEach(label => {
+    cy.contains('label', label)
+      .should('exist')
+      .parents('div.relative.flex.items-start')
+      .within(() => {
+        cy.get('input[type="checkbox"]').then($checkbox => {
+          if (!$checkbox.is(':checked')) {
+            cy.wrap($checkbox).check({ force: true });
+          }
+        });
+      });
+  });
+});
+
 Cypress.Commands.add('clickLastSaveButton', () => {
   cy.get('div.border-t.rounded-b-md')
     .last()
