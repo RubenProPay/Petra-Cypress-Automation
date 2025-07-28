@@ -5,7 +5,7 @@ describe('VF+ PRD Preferences Check', () => {
     cy.wait(1000);
   });
 
-  it.skip('checks preferences on VF+ PRD site', () => {
+  it('checks preferences on VF+ PRD site', () => {
     cy.sideNavPrd('Administration', 'global');
     cy.wait(1000);
 
@@ -42,7 +42,7 @@ describe('VF+ PRD Preferences Check', () => {
 
     cy.selectActiveMemberType();
     cy.wait(1000);
-    
+
     cy.clickLastSaveButton();
     cy.wait(1000);
 
