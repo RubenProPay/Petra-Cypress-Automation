@@ -1,33 +1,28 @@
 describe('VF+ PRD Preferences Check', () => {
-  it('checks preferences on VF+ PRD site', () => {
-    // Intercept the Cloudflare challenge request and mock a successful response
-    cy.intercept('GET', 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/**', {
-      statusCode: 200,
-      body: { success: true },
-    }).as('cloudflareChallenge');
+  beforeEach(() => {
+    cy.intercept(
+      'GET',
+      'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/**',
+      {
+        statusCode: 200,
+        body: { success: true },
+      }
+    ).as('cloudflareChallenge');
 
-    // cy.visit('https://vfplus.datakrag.co.za/');
-    cy.visit('/')
-
+    cy.visit('/');
     cy.wait('@cloudflareChallenge');
-
     cy.url().should('include', '/login');
-
     cy.get('input[name="email"]').type('ruben.dasilva@propaysystems.com');
-    cy.get('input[name="email"]').should('have.value', 'ruben.dasilva@propaysystems.com');
-    cy.wait(1000);
-
     cy.get('input[name="password"]').type('YWZNxJepZPd7kiq!');
     cy.get('button[type="submit"]').first().click({ force: true });
     cy.wait(1000);
+  });
 
-    // cy.sideNavPrd('Administration', 'https://vfplus.datakrag.co.za/global');
+  it('checks preferences on VF+ PRD site', () => {
     cy.sideNavPrd('Administration', 'global');
     cy.wait(1000);
 
-    cy.contains('a', 'Modules')
-      .should('be.visible')
-      .click();
+    cy.contains('a', 'Modules').should('be.visible').click();
     cy.wait(1000);
 
     cy.ensureModuleChecked('Members');
@@ -44,14 +39,20 @@ describe('VF+ PRD Preferences Check', () => {
 
     cy.contains('button', 'Save').should('be.visible').click();
     cy.wait(2000);
+  });
 
-    // from the bottom onwards this should be a new "it" test case 
+  it('checks the settings on each module', () => {
+    cy.sideNavPrd('Administration', 'global');
+    cy.wait(1000);
+
+    cy.contains('a', 'Modules').should('be.visible').click();
+    cy.wait(1000);
 
     cy.clickModuleEditIcon('Members');
     cy.wait(1000);
     cy.ensureMemberTypesCheckboxChecked();
     cy.wait(1000);
-    // add in here that the multi-select dropdown is cleared, clicks on it and searches for "Active Member"
+    // TODO: Add step to clear multi-select dropdown, click, and search for "Active Member"
     cy.clickLastSaveButton();
     cy.wait(1000);
 
@@ -69,5 +70,4 @@ describe('VF+ PRD Preferences Check', () => {
     cy.clickLastSaveButton();
     cy.wait(1000);
   });
-
 });
