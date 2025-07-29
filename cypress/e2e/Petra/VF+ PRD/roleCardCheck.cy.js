@@ -30,14 +30,22 @@ describe('Correct Member Type Check', () => {
 
       cy.visit('/');
       cy.sideNav('Members', 'members/member');
-      cy.wait(3000);
+      cy.wait(2000);
 
       cy.get('input[type="search"]')
         .should('be.visible')
         .type(String(randomValue), { delay: 50 });
       cy.get('body').type('{enter}');
-      cy.wait(2000);
+      cy.wait(15000);
 
+      cy.contains('td', String(randomValue))
+      .parents('tr')
+      .within(() => {
+        cy.get('button').first().click(); 
+      });
+    
+      cy.contains('button', 'Edit').should('be.visible').click({ force: true }); 
+      cy.wait(2000);
     });
   });
 
