@@ -11,7 +11,7 @@ describe('Correct Member Type Check', () => {
   });
 
   it('checks if the role card appears for Search Member', () => {
-    cy.fixture('membersearchtable').then((members) => {
+    cy.fixture('activeMemberType').then((members) => {
       const member = members[Math.floor(Math.random() * members.length)];
 
       // Only use fields that exist in the fixture
@@ -38,14 +38,15 @@ describe('Correct Member Type Check', () => {
       cy.get('body').type('{enter}');
       cy.wait(15000);
 
+      // Click the hyperlink in the Member Number cell for the searched member
       cy.contains('td', String(randomValue))
-      .parents('tr')
-      .within(() => {
-        cy.get('button').first().click(); 
-      });
-    
-      cy.contains('button', 'Edit').should('be.visible').click({ force: true }); 
-      cy.wait(2000);
+        .parents('tr')
+        .within(() => {
+          cy.contains('a', String(member["Member Number"])).click({ force: true });
+        });
+
+      cy.contains('a', 'Personal Details').should('be.visible');
+      cy.wait(1000);
     });
   });
 
