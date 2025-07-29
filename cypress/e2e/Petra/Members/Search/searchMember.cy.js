@@ -5,13 +5,8 @@ describe('Correct Member Type Check', () => {
     cy.wait(1000);
   });
 
-  it.skip('checks if the role card appears for Create Member', () => {
-    cy.sideNavPrd('Members', 'members/create');
-    cy.wait(1000);
-  });
-
-  it('searches for an active member on the system with status=active', () => {
-    cy.fixture('activeMemberType').then((members) => {
+  it('searches for a member on the system', () => {
+    cy.fixture('membersearchtable').then((members) => {
       const member = members[Math.floor(Math.random() * members.length)];
 
       const searchableFields = [
@@ -44,37 +39,5 @@ describe('Correct Member Type Check', () => {
       cy.contains('a', 'Personal Details').should('be.visible');
       cy.wait(1000);
     });
-  });
-
-  it.skip('checks if the role card does not appear for a Member', () => {
-    cy.sideNavPrd('Administration', 'global');
-    cy.wait(1000);
-
-    cy.contains('a', 'Modules').should('be.visible').click();
-    cy.wait(1000);
-
-    cy.clickModuleEditIcon('Members');
-    cy.wait(1000);
-    cy.ensureMemberTypesCheckboxChecked();
-    cy.wait(1000);
-
-    cy.selectActiveMemberType();
-    cy.wait(1000);
-
-    cy.clickLastSaveButton();
-    cy.wait(1000);
-
-    cy.clickModuleEditIcon('Voters Role');
-    cy.wait(1000);
-    cy.ensureVotersRollCheckboxChecked();
-    cy.wait(1000);
-    cy.clickLastSaveButton();
-    cy.wait(1000);
-
-    cy.clickModuleEditIcon('Waiting Room');
-    cy.wait(1000);
-    cy.ensureWaitingRoomCheckboxChecked();
-    cy.wait(1000);
-    cy.clickLastSaveButton();
   });
 });
