@@ -1,11 +1,11 @@
-describe('VF+ PRD Preferences Check', () => {
+describe('Preferences Check', () => {
   beforeEach(() => {
     cy.loginRoot();
     cy.visit('/');
     cy.wait(1000);
   });
 
-  it('checks preferences on VF+ PRD site', () => {
+  it('checks if the modules/preferences are toggled on', () => {
     cy.sideNavPrd('Administration', 'global');
     cy.wait(1000);
 
