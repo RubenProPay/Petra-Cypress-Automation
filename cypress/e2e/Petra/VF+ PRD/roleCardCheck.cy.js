@@ -10,7 +10,7 @@ describe('Correct Member Type Check', () => {
     cy.wait(1000);
   });
 
-  it('searches for an active member on the system with status=active', () => {
+  it('searches for an active member (active) & checks the role card', () => {
     cy.fixture('activeMemberType').then((members) => {
       const member = members[Math.floor(Math.random() * members.length)];
 
@@ -43,38 +43,43 @@ describe('Correct Member Type Check', () => {
 
       cy.contains('a', 'Personal Details').should('be.visible');
       cy.wait(1000);
+
+      cy.contains('a', 'Membership Details').should('be.visible').click();
+
+      // todo: Add a check for the role card
     });
   });
 
   it.skip('checks if the role card does not appear for a Member', () => {
-    cy.sideNavPrd('Administration', 'global');
-    cy.wait(1000);
+    cy.fixture('memberssearchtable').then((members) => {
+    const member = members[Math.floor(Math.random() * members.length)];
 
-    cy.contains('a', 'Modules').should('be.visible').click();
-    cy.wait(1000);
+    const searchableFields = [
+    member["ID Number"],
+    member["Cell phone number"],
+    member["Email"],
+    member["Member Number"],
+    member["Old Member No."]
+    ].filter(Boolean);
 
-    cy.clickModuleEditIcon('Members');
-    cy.wait(1000);
-    cy.ensureMemberTypesCheckboxChecked();
-    cy.wait(1000);
+    const randomValue =
+    searchableFields[Math.floor(Math.random() * searchableFields.length)];
 
-    cy.selectActiveMemberType();
-    cy.wait(1000);
+    cy.visit('/');
+    cy.sideNav('Members', 'members/member');
+    cy.wait(2000);
 
-    cy.clickLastSaveButton();
-    cy.wait(1000);
+    cy.get('input[type="search"]')
+    .should('be.visible')
+    .type(String(randomValue), { delay: 50 });
+    cy.get('body').type('{enter}');
+    cy.wait(15000);
 
-    cy.clickModuleEditIcon('Voters Role');
-    cy.wait(1000);
-    cy.ensureVotersRollCheckboxChecked();
-    cy.wait(1000);
-    cy.clickLastSaveButton();
-    cy.wait(1000);
-
-    cy.clickModuleEditIcon('Waiting Room');
-    cy.wait(1000);
-    cy.ensureWaitingRoomCheckboxChecked();
-    cy.wait(1000);
-    cy.clickLastSaveButton();
-  });
+    cy.contains('td', String(randomValue))
+    .parents('tr')
+    .within(() => {
+        cy.contains('a', String(member["Member Number"])).click({ force: true });
+            });
+        });
+    });
 });
