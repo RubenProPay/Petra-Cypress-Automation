@@ -33,8 +33,6 @@ Cypress.Commands.add('sideNavPrd', (module, page) => {
 
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
-  const fullItemText = item;
-
   const container = cy.get(`div[form-wrapper="${labelFor}"]`);
 
   if (options.clear) {
@@ -42,24 +40,29 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
       .find('div[name="form.wrapper.container.append"]')
       .find('button')
       .first()
-      .click({force:true});
+      .click({ force: true });
     cy.wait(500);
   }
 
-  // Click to open dropdown
   cy.contains('label', labelText)
     .should('be.visible')
     .click();
 
-  // Wait for dropdown to appear and interact with it
   cy.get('.max-h-80:visible')
-  .first()
-  .should('be.visible')
-  .within(() => {
-    cy.contains('div', fullItemText)
-      .should('be.visible')
-      .click({ force: true });
-  });
+    .first()
+    .should('be.visible')
+    .within(() => {
+      if (item === '__select_first__') {
+        cy.get('div')
+          .filter(':visible')
+          .first()
+          .click({ force: true });
+      } else {
+        cy.contains('div', item)
+          .should('be.visible')
+          .click({ force: true });
+      }
+    });
 });
 
 // Searchable dropdowns (with input field inside)
@@ -104,19 +107,19 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
   cy.wait(300);
 });
 
-Cypress.Commands.add('selectCallCenterAndProvinces', (userFixture) => {
-  const { role, call_center, province } = userFixture;
+Cypress.Commands.add('selectCallCentreAndProvinces', (userFixture) => {
+  const { role, call_centre, province } = userFixture;
 
-  // Select Call Center using stable logic
-  cy.searchableDropdown('call_center_id', 'Call Center *', call_center, { clear: true });
+  // Select Call Centre using stable logic
+  cy.searchableDropdown('call_center_id', 'Call Centre', call_centre, { clear: true });
 
   // Wait for Livewire to finish updating the provinces
-  if (call_center === 'Head Office') {
+  if (call_centre === 'Head Office') {
     cy.wait(1000);
   }
 
   // If Head Office user, select ALL provinces using existing dropdown command
-  if (role === 'National Admin (Head Office)' && call_center === 'Head Office') {
+  if (role === 'National Admin (Head Office)' && call_centre === 'Head Office') {
     const provinces = [
       'Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal',
       'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'
@@ -154,7 +157,7 @@ Cypress.Commands.add('generateUserFixture', () => {
     'Gauteng Call Centre': 'Gauteng',
     'Kwazulu-Natal Call Centre': 'KwaZulu-Natal',
     'Limpopo Call Centre': 'Limpopo',
-    'Mpumalanga Call Center': 'Mpumalanga',
+    'Mpumalanga Call Centre': 'Mpumalanga',
     'Northern Cape Call Centre': 'Northern Cape',
     'North West Call Centre': 'North West',
     'Western Cape Call Centre': 'Western Cape',
@@ -168,8 +171,8 @@ Cypress.Commands.add('generateUserFixture', () => {
     'National Admin (Head Office)'
   ];
 
-  const callCenters = Object.keys(roleToRegionMap);
-  callCenters.push('Head Office');
+  const callCentres = Object.keys(roleToRegionMap);
+  callCentres.push('Head Office');
 
   let userFixture = {};
 
@@ -192,12 +195,12 @@ Cypress.Commands.add('generateUserFixture', () => {
           userFixture.role = selectedRole;
 
           if (selectedRole === 'National Admin (Head Office)') {
-            userFixture.call_center = 'Head Office';
+            userFixture.call_centre = 'Head Office';
             userFixture.provinces = allProvinces;
           } else {
             const entries = Object.entries(roleToRegionMap);
-            const [callCenter, province] = entries[Math.floor(Math.random() * entries.length)];
-            userFixture.call_center = callCenter;
+            const [callCentre, province] = entries[Math.floor(Math.random() * entries.length)];
+            userFixture.call_centre = callCentre;
             userFixture.province = province;
             userFixture.provinces = [province];
           }

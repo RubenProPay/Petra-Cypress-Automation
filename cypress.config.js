@@ -16,7 +16,7 @@ module.exports = defineConfig({
 
           const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
           const role = faker.helpers.arrayElement(['Data Capturer', 'National Admin (Head Office)', 'Provincial Admin', 'User (Viewer)']);
-          const call_center = faker.helpers.arrayElement(['Eastern Cape Call Centre', 'Free State Call Centre', 'Gauteng Call Centre', 'Kwazulu-Natal Call Centre', 'Limpopo Call Centre', 'Mpumalanga Call Center', 'Northern Cape Call Centre', 'North West Call Centre', 'Western Cape Call Centre', 'International Call Centre', 'Head Office']);
+          const call_centre = faker.helpers.arrayElement(['Eastern Cape Call Centre', 'Free State Call Centre', 'Gauteng Call Centre', 'Kwazulu-Natal Call Centre', 'Limpopo Call Centre', 'Mpumalanga Call Centre', 'Northern Cape Call Centre', 'North West Call Centre', 'Western Cape Call Centre', 'International Call Centre', 'Head Office']);
 
           return {
             name,
@@ -25,7 +25,7 @@ module.exports = defineConfig({
             cell,
             email,
             language,
-            call_center,
+            call_centre,
             role
           };
         }
