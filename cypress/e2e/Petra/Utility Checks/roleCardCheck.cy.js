@@ -60,7 +60,13 @@ describe('Correct Member Type Check', () => {
           // insert new logic here to select first item in branch dropdown
           cy.wait(500);
 
-          cy.dropdown('branch_id', 'Member Branch', '__select_first__')
+          cy.branchDropdown('branch_id', 'Member Branch', '__select_first__')
+          cy.get('button[wire\\:click="submit"]').last().click();
+          cy.contains('label', 'TAK | BRANCH')
+            .should('be.visible')
+            .then(() => {
+              cy.log('✅ Label "TAK | BRANCH" found — branch is correct');
+            });
 
         } else {
           cy.log('✅ Member has a branch — checking for "TAK | BRANCH" label');
