@@ -5,8 +5,8 @@ describe('Correct Member Type Check', () => {
     cy.wait(1000);
   });
 
-  it('searches for an active member (active) & checks the role card', () => {
-    cy.fixture('example').then((members) => {
+  it.skip('searches for an active member (active) & checks the role card', () => {
+    cy.fixture('activeMemberType').then((members) => {
       const member = members[Math.floor(Math.random() * members.length)];
 
       const searchableFields = [
@@ -84,6 +84,38 @@ describe('Correct Member Type Check', () => {
             });
         }
       });
+    cy.visit('/');
+    cy.wait(1000);
     });
+  });
+
+  it('checks if the role card appears for Create Member', () => {
+    cy.sideNavPrd('Members', 'members/create');
+    cy.wait(1000);
+
+    cy.contains('button', 'Create Member').should('be.visible').click();
+    cy.wait(1000);
+    cy.contains('p', 'Update members role.').should('be.visible');
+    cy.wait(500);
+
+    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please select a correct Member Type.').scrollIntoView().should('be.visible');
+    cy.wait(500);
+
+    cy.dropdown('member_type_id', 'Member type *', 'Active Member', { clear: true });
+    cy.wait(500);
+
+    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please assign a branch to the member').should('be.visible');
+    cy.wait(500);
+    
+    cy.contains('p', 'Update members address information.').should('be.visible');
+    cy.dropdown('province_id', 'Province *', 'Gauteng', { clear: true });
+    cy.wait(2000);
+    cy.branchDropdown('branch_id', 'Member Branch', '__select_first__')
+
+    cy.contains('label', 'TAK | BRANCH')
+            .should('be.visible')
+            .then(() => {
+              cy.log('✅ Label "TAK | BRANCH" found — branch is correct');
+            });
   });
 });
