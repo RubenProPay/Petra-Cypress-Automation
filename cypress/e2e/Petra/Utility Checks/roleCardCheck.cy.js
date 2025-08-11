@@ -117,5 +117,13 @@ describe('Correct Member Type Check', () => {
             .then(() => {
               cy.log('✅ Label "TAK | BRANCH" found — branch is correct');
             });
+
+    cy.dropdown('member_type_id', 'Member type *', 'Normal Member', { clear: true });
+    cy.wait(500);
+
+    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please select a correct Member Type.').scrollIntoView().should('be.visible');
+    cy.wait(500);
+
+
   });
 });
