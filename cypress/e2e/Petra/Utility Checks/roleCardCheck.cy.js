@@ -57,11 +57,17 @@ describe('Correct Member Type Check', () => {
             .should('be.visible')
             .click({ force: true, multiple: true, timeout: 5000 });
 
-          // insert new logic here to select first item in branch dropdown
           cy.wait(500);
 
+          cy.get('#address2').clear().type('Test');
+          cy.wait(500);
+          cy.get('#address3').clear().type('Test');
+          cy.wait(500);
+          cy.get('#address4').clear().type('Test');
+          cy.wait(500);
           cy.branchDropdown('branch_id', 'Member Branch', '__select_first__')
           cy.get('button[wire\\:click="submit"]').last().click();
+          cy.wait(500);
           cy.contains('label', 'TAK | BRANCH')
             .should('be.visible')
             .then(() => {
