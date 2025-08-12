@@ -1,6 +1,20 @@
 import 'cypress-xpath';
 import 'cypress-file-upload';
 
+// Expand side navigation
+Cypress.Commands.add('sideNavExpand', (...labels) => {
+  if (!labels.length) throw new Error('Provide at least one label');
+
+  labels.slice(0, -1).forEach((label) => {
+    cy.contains('span', label, { timeout: 10000 })
+      .parents('button')
+      .click({ force: true });
+  });
+
+  const last = labels[labels.length - 1];
+  cy.contains('a,button', last, { timeout: 10000 }).click({ force: true });
+});
+
 // Side navigation
 Cypress.Commands.add('sideNav', (module, page) => {
   cy.contains('span', module)
@@ -30,6 +44,8 @@ Cypress.Commands.add('sideNavPrd', (module, page) => {
 
   cy.url().should('eq', targetHref);
 });
+
+//
 
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
