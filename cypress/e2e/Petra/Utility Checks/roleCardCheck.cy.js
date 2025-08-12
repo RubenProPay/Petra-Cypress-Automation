@@ -171,7 +171,7 @@ describe('Correct Member Type Check', () => {
           cy.dropdown('member_type_id', 'Member type *', 'Active Member', { clear: true });
           cy.wait(500);
 
-          cy.contains('span', 'Member Branch')
+          cy.contains('span', 'Branch')
             .closest('div')
             .parent()
             .siblings()
@@ -215,7 +215,7 @@ describe('Correct Member Type Check', () => {
           cy.wait(500);
           cy.branchDropdown('branch_id', 'Member Branch', '__select_first__')
           cy.get('button[wire\\:click="submit"]').last().click();
-          cy.wait(500);
+          cy.wait(1000);
         
         } else {
           cy.log('✅ Member has a branch — checking for "TAK | BRANCH" label');
