@@ -5,7 +5,7 @@ describe('Dash Branch Check', () => {
     cy.wait(1000);
   });
 
-  it.skip('checks if the dash branch exists in the Branch table', () => {
+  it('checks if the dash branch exists in the Branch table', () => {
     cy.sideNavExpand('Administration', 'Sectors', 'Branches');
     cy.wait(500);
     // column sort
