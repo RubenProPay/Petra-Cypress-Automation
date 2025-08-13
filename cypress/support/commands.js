@@ -1,33 +1,18 @@
 import 'cypress-xpath';
 import 'cypress-file-upload';
 
-// Logs in as root user
-Cypress.Commands.add("loginRoot", () => {
-  const sessionId = `user-session-cypress`; // Add detail to make it unique if needed
+// Expand side navigation
+Cypress.Commands.add('sideNavExpand', (...labels) => {
+  if (!labels.length) throw new Error('Provide at least one label');
 
-  cy.session(sessionId, () => {
-    cy.visit("/login");
-    cy.get("input[name='email']", { timeout: 6000 }).should('be.visible').type("propaycypressautomation@gmail.com");
-    cy.get("input[name='password']").type("ElongatedMango1103");
-    cy.get("button[type='submit']").click();
-    cy.url().should("not.include", "/login");
-  }, {
-    cacheAcrossSpecs: true
+  labels.slice(0, -1).forEach((label) => {
+    cy.contains('span', label, { timeout: 10000 })
+      .parents('button')
+      .click({ force: true });
   });
-});
 
-// logs in as user
-Cypress.Commands.add("loginUser", () => {
-  cy.session("user-session", () => {
-    cy.visit("/login");
-    cy.get("input[name='email']").type("rubenpropay@gmail.com");
-    cy.get("input[name='password']").type("ElongatedMango1103");
-    cy.get("button[type='submit']").click();
-    cy.url().should("not.include", "/login");
-  },
-  {
-    cacheAcrossSpecs: true
-  });
+  const last = labels[labels.length - 1];
+  cy.contains('a,button', last, { timeout: 10000 }).click({ force: true });
 });
 
 // Side navigation
@@ -42,10 +27,28 @@ Cypress.Commands.add('sideNav', (module, page) => {
   cy.url().should('eq', Cypress.config().baseUrl + page);
 });
 
+Cypress.Commands.add('sideNavPrd', (module, page) => {
+  cy.contains('span', module)
+    .parents('button')
+    .click({ force: true });
+
+  const isAbsoluteUrl = page.startsWith('http');
+  const targetHref = isAbsoluteUrl ? page : Cypress.config().baseUrl + page;
+
+  console.log('Navigating to href:', targetHref);
+
+  cy.get(`a[href="${targetHref}"]`)
+    .last()
+    .should('be.visible')
+    .click();
+
+  cy.url().should('eq', targetHref);
+});
+
+//
+
 //Non searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
-  const fullItemText = item;
-
   const container = cy.get(`div[form-wrapper="${labelFor}"]`);
 
   if (options.clear) {
@@ -53,24 +56,29 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
       .find('div[name="form.wrapper.container.append"]')
       .find('button')
       .first()
-      .click({force:true});
+      .click({ force: true });
     cy.wait(500);
   }
 
-  // Click to open dropdown
   cy.contains('label', labelText)
     .should('be.visible')
     .click();
 
-  // Wait for dropdown to appear and interact with it
   cy.get('.max-h-80:visible')
-  .first()
-  .should('be.visible')
-  .within(() => {
-    cy.contains('div', fullItemText)
-      .should('be.visible')
-      .click({ force: true });
-  });
+    .first()
+    .should('be.visible')
+    .within(() => {
+      if (item === '__select_first__') {
+        cy.get('div')
+          .filter(':visible')
+          .first()
+          .click({ force: true });
+      } else {
+        cy.contains('div', item)
+          .should('be.visible')
+          .click({ force: true });
+      }
+    });
 });
 
 // Searchable dropdowns (with input field inside)
@@ -115,19 +123,19 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
   cy.wait(300);
 });
 
-Cypress.Commands.add('selectCallCenterAndProvinces', (userFixture) => {
-  const { role, call_center, province } = userFixture;
+Cypress.Commands.add('selectCallCentreAndProvinces', (userFixture) => {
+  const { role, call_centre, province } = userFixture;
 
-  // Select Call Center using stable logic
-  cy.searchableDropdown('call_center_id', 'Call Center *', call_center, { clear: true });
+  // Select Call Centre using stable logic
+  cy.searchableDropdown('call_center_id', 'Call Centre', call_centre, { clear: true });
 
   // Wait for Livewire to finish updating the provinces
-  if (call_center === 'Head Office') {
+  if (call_centre === 'Head Office') {
     cy.wait(1000);
   }
 
   // If Head Office user, select ALL provinces using existing dropdown command
-  if (role === 'National Admin (Head Office)' && call_center === 'Head Office') {
+  if (role === 'National Admin (Head Office)' && call_centre === 'Head Office') {
     const provinces = [
       'Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal',
       'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'
@@ -165,7 +173,7 @@ Cypress.Commands.add('generateUserFixture', () => {
     'Gauteng Call Centre': 'Gauteng',
     'Kwazulu-Natal Call Centre': 'KwaZulu-Natal',
     'Limpopo Call Centre': 'Limpopo',
-    'Mpumalanga Call Center': 'Mpumalanga',
+    'Mpumalanga Call Centre': 'Mpumalanga',
     'Northern Cape Call Centre': 'Northern Cape',
     'North West Call Centre': 'North West',
     'Western Cape Call Centre': 'Western Cape',
@@ -179,8 +187,8 @@ Cypress.Commands.add('generateUserFixture', () => {
     'National Admin (Head Office)'
   ];
 
-  const callCenters = Object.keys(roleToRegionMap);
-  callCenters.push('Head Office');
+  const callCentres = Object.keys(roleToRegionMap);
+  callCentres.push('Head Office');
 
   let userFixture = {};
 
@@ -203,12 +211,12 @@ Cypress.Commands.add('generateUserFixture', () => {
           userFixture.role = selectedRole;
 
           if (selectedRole === 'National Admin (Head Office)') {
-            userFixture.call_center = 'Head Office';
+            userFixture.call_centre = 'Head Office';
             userFixture.provinces = allProvinces;
           } else {
             const entries = Object.entries(roleToRegionMap);
-            const [callCenter, province] = entries[Math.floor(Math.random() * entries.length)];
-            userFixture.call_center = callCenter;
+            const [callCentre, province] = entries[Math.floor(Math.random() * entries.length)];
+            userFixture.call_centre = callCentre;
             userFixture.province = province;
             userFixture.provinces = [province];
           }
@@ -595,3 +603,39 @@ Cypress.Commands.add('clickAllPaginationPages', () => {
   clickNextIfExists();
 });
 
+Cypress.Commands.add('branchDropdown', (labelFor, labelText, item, options = { clear: false }) => {
+  const container = cy.get(`div[form-wrapper="${labelFor}"]`);
+
+  if (options.clear) {
+    container
+      .find('div[name="form.wrapper.container.append"]')
+      .find('button')
+      .first()
+      .click({ force: true });
+    cy.wait(500);
+  }
+
+  // Open dropdown
+  cy.contains('label', labelText)
+    .should('be.visible')
+    .click();
+
+  cy.get('.max-h-80:visible')
+    .first()
+    .should('be.visible')
+    .within(() => {
+      if (item === '__select_first__') {
+        // Click the very first visible option
+        cy.get('li[tabindex="-1"], li[tabindex="0"]')
+          .filter(':visible')
+          .first()
+          .find('div')
+          .first()
+          .click({ force: true });
+      } else {
+        cy.contains('div', item)
+          .should('be.visible')
+          .click({ force: true });
+      }
+    });
+});

@@ -67,7 +67,7 @@ describe('Navigate to a User & edit', () => {
       currentLanguage = oppositeLanguage1; // Update after swap
 
       cy.generateUserFixture().then((newUserFixture) => {
-      cy.selectCallCenterAndProvinces(newUserFixture);
+      cy.selectCallCentreAndProvinces(newUserFixture);
       cy.wait(1000);
       });
 
