@@ -50,10 +50,29 @@ describe('Dash Branch Check', () => {
         cy.contains('span', 'Branch').should('be.visible').click({ force: true });
         cy.wait(500);
 
-        // cy.get('input[type="Search"]').should('be.visible').type('--', { delay: 50 });
-        // cy.wait(500);
+        cy.get('.choices__inner').click();
+        cy.wait(500);
+        
+        cy.get('.choices__list--dropdown .choices__input--cloned').type('--', { delay: 50 });
+        cy.wait(500);
 
-        // cy.get('button[title="Delete"]').should('be.visible').click({ force: true });
-        // cy.wait(1000);
+        cy.get('.choices__list--dropdown').within(() => {
+          cy.contains('--').should('not.exist');
+        });
+        cy.wait(2000);
+
+        cy.log('No branch of "--" should exist in the Members Search table');
+
+        cy.get('.choices__list--dropdown .choices__input--cloned').clear();
+        cy.wait(500);
+
+        cy.get('.choices__list--dropdown .choices__input--cloned').type('Empty', { delay: 50 });
+        cy.wait(500);
+
+        cy.get('.choices__list--dropdown').within(() => {
+          cy.contains('Empty').should('exist').click();
+        });
+        cy.wait(2000);
+      
     });
 });
