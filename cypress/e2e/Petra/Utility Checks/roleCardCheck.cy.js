@@ -51,7 +51,7 @@ describe('Correct Member Type Check', () => {
         member["Email"],
         member["Member Number"],
         member["Old Member No."]
-      ].filter(Boolean);
+      ].filter(val => val && val !== "--");
 
       const randomValue =
         searchableFields[Math.floor(Math.random() * searchableFields.length)];
@@ -135,7 +135,7 @@ describe('Correct Member Type Check', () => {
         member["Email"],
         member["Member Number"],
         member["Old Member No."]
-      ].filter(Boolean);
+      ].filter(val => val && val !== "--");
 
       const randomValue =
         searchableFields[Math.floor(Math.random() * searchableFields.length)];
