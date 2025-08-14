@@ -16,7 +16,10 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import './loginCommands'
+import './memberCommands'
 import './modulePreferencesCommands'
+import './roleCommands'
+import './userCommands'
 
 Cypress.on('uncaught:exception', (err, runnable) => {
   const livewireIgnoreList = [
