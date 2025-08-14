@@ -212,6 +212,8 @@ Cypress.Commands.add('generateLanguage', () => {
   return generateLanguage();
 });
 
+
+// Table commands
 Cypress.Commands.add('collectTableHeaders', () => {
   let headers = [];
   return cy.get('th[class*="fi-ta-header-cell"]')
@@ -222,11 +224,11 @@ Cypress.Commands.add('collectTableHeaders', () => {
     .then(() => headers);
 });
 
+// Toggle all columns in the table
 Cypress.Commands.add('toggleAllColumns', () => {
   cy.get('button[title="Toggle columns"]').click();
   cy.wait(500);
 
-  // Uncheck all checkboxes
   cy.get('label[for] input[type="checkbox"]').each(($checkbox) => {
     cy.wait(300);
     if ($checkbox.prop('checked')) {
@@ -238,7 +240,6 @@ Cypress.Commands.add('toggleAllColumns', () => {
   cy.get('body').click(0, 0); // Close menu
   cy.wait(500);
 
-  // Reopen and re-check all checkboxes
   cy.get('button[title="Toggle columns"]').click();
   cy.wait(500);
   cy.get('label[for] input[type="checkbox"]').each(($checkbox) => {
@@ -249,12 +250,14 @@ Cypress.Commands.add('toggleAllColumns', () => {
   });
 });
 
+// Verify all columns are visible in the table
 Cypress.Commands.add('verifyAllColumnsVisible', (headers) => {
   headers.forEach((headerText) => {
     cy.contains('th', headerText).should('exist');
   });
 });
 
+// Sort and verify all columns in the table
 Cypress.Commands.add('sortAndVerifyAllColumns', () => {
   const columnsToSkipByName = ['Progress'];
   let headers = [];
@@ -319,6 +322,7 @@ Cypress.Commands.add('sortAndVerifyAllColumns', () => {
     });
 });
 
+// Cycle through per-page options in the table
 Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
   const options = ['10', '25', '50', '100'];
   const cycle = [...options, ...options.slice(0, -1).reverse()]; // 10,25,50,100,50,25,10
@@ -339,6 +343,7 @@ Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
     });
 });
 
+// Click through all pagination pages
 Cypress.Commands.add('clickAllPaginationPages', () => {
   function clickNextIfExists() {
     cy.get('ol.fi-pagination-items')
