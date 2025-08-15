@@ -15,6 +15,9 @@ describe('Preferences Check', () => {
     cy.ensureModuleChecked('Members');
     cy.wait(1000);
 
+    cy.ensureModuleChecked('ProComm');
+    cy.wait(1000);
+
     cy.ensureModuleChecked('Reports');
     cy.wait(1000);
 
@@ -59,5 +62,8 @@ describe('Preferences Check', () => {
     cy.wait(1000);
     cy.clickLastSaveButton();
     cy.wait(1000);
+
+    cy.visit('/');
+    
   });
 });
