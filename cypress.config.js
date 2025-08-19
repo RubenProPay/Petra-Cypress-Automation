@@ -11,19 +11,13 @@ module.exports = defineConfig({
         generateUser() {
           const name = faker.person.firstName();
           const surname = faker.person.lastName();
-          const id_number = faker.number.int({ min: 1000000000000, max: 9999999999999 }).toString();
-          const cell = '0' + faker.number.int({ min: 600000000, max: 899999999 });
           const email = faker.internet.email({ firstName: name, lastName: surname }).toLowerCase();
-
           const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
           const role = faker.helpers.arrayElement(['Data Capturer', 'National Admin (Head Office)', 'Provincial Admin', 'User (Viewer)']);
           const call_centre = faker.helpers.arrayElement(['Eastern Cape Call Centre', 'Free State Call Centre', 'Gauteng Call Centre', 'Kwazulu-Natal Call Centre', 'Limpopo Call Centre', 'Mpumalanga Call Centre', 'Northern Cape Call Centre', 'North West Call Centre', 'Western Cape Call Centre', 'International Call Centre', 'Head Office']);
-
           return {
             name,
             surname,
-            id_number,
-            cell,
             email,
             language,
             call_centre,
@@ -31,14 +25,12 @@ module.exports = defineConfig({
           };
         },
         generateMember() {
-          const id_number = faker.number.int({ min: 1000000000000, max: 9999999999999 }).toString();
           const member_type = faker.helpers.arrayElement(['Active Member', 'Non member', 'Normal Member', 'Supporter']);
           const first_name = faker.person.firstName();
           const surname = faker.person.lastName();
           const title = faker.helpers.arrayElement(['Dr.', 'Ds.', 'Miss.', 'Mr.', 'Mrs.', 'Ms.']);
           const gender = faker.helpers.arrayElement(['Male', 'Female']);
           const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
-          const cellphone = '0' + faker.number.int({ min: 600000000, max: 899999999 });
           const email = faker.internet.email({ firstName: first_name, lastName: surname }).toLowerCase();
           const address = {
             street: faker.location.streetAddress(),
@@ -51,14 +43,12 @@ module.exports = defineConfig({
             ])
           };
           return {
-            id_number,
             member_type,
             first_name,
             surname,
             title,
             gender,
             language,
-            cellphone,
             email,
             address
           };

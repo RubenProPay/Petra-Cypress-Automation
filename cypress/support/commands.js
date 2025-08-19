@@ -1,8 +1,11 @@
 // Generate Member Fixture
 Cypress.Commands.add('generateMemberFixture', () => {
-  // Use faker from the Cypress config task if available
+  // Use faker from the Cypress config task for all fields except id_number
   return cy.task('generateMember').then((member) => {
-    return member;
+    return cy.generateSAID().then((id_number) => {
+      member.id_number = id_number;
+      return member;
+    });
   });
 });
 import 'cypress-xpath';
