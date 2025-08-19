@@ -6,6 +6,7 @@ module.exports = defineConfig({
   e2e: {
     experimentalSessionAndOrigin: true, // <-- Add this line
     setupNodeEvents(on, config) {
+
       on('task', {
         generateUser() {
           const name = faker.person.firstName();
@@ -27,6 +28,39 @@ module.exports = defineConfig({
             language,
             call_centre,
             role
+          };
+        },
+        generateMember() {
+          const id_number = faker.number.int({ min: 1000000000000, max: 9999999999999 }).toString();
+          const member_type = faker.helpers.arrayElement(['Active Member', 'Non member', 'Normal Member', 'Supporter']);
+          const first_name = faker.person.firstName();
+          const surname = faker.person.lastName();
+          const title = faker.helpers.arrayElement(['Dr.', 'Ds.', 'Miss.', 'Mr.', 'Mrs.', 'Ms.']);
+          const gender = faker.helpers.arrayElement(['Male', 'Female']);
+          const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
+          const cellphone = '0' + faker.number.int({ min: 600000000, max: 899999999 });
+          const email = faker.internet.email({ firstName: first_name, lastName: surname }).toLowerCase();
+          const address = {
+            street: faker.location.streetAddress(),
+            suburb: faker.location.secondaryAddress(),
+            city: faker.location.city(),
+            code: faker.location.zipCode(),
+            province: faker.helpers.arrayElement([
+              'Eastern Cape', 'Free State', 'Gauteng', 'International', 'KwaZulu-Natal',
+              'Limpopo', 'Mpumalanga', 'North West', 'Northern Cape', 'Unknown', 'Western Cape'
+            ])
+          };
+          return {
+            id_number,
+            member_type,
+            first_name,
+            surname,
+            title,
+            gender,
+            language,
+            cellphone,
+            email,
+            address
           };
         }
       });

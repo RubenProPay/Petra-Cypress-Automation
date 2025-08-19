@@ -1,3 +1,10 @@
+// Generate Member Fixture
+Cypress.Commands.add('generateMemberFixture', () => {
+  // Use faker from the Cypress config task if available
+  return cy.task('generateMember').then((member) => {
+    return member;
+  });
+});
 import 'cypress-xpath';
 import 'cypress-file-upload';
 
