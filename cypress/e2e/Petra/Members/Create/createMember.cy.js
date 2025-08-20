@@ -29,10 +29,41 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.visit('/');
     cy.wait(1000);
     cy.sideNav('Members', 'members/create');
+    cy.wait(1000);
+    cy.get('body').then(($body) => {
+      if ($body.find('p:contains("Verify an ID number with the IEC.")').length > 0) {
+        // If visible, continue as normal
+        cy.contains('p', 'Verify an ID number with the IEC.').should('be.visible');
+      } else {
+        // If not visible, perform the required steps first
+        cy.sideNavPrd('Administration', 'global');
+        cy.wait(1000);
+        cy.contains('a', 'Modules').should('be.visible').click();
+        cy.wait(1000);
+        cy.ensureModuleChecked('Voters Role');
+        cy.wait(1000);
+        cy.contains('button', 'Save').should('be.visible').click();
+        cy.wait(2000);
+        cy.sideNavPrd('Administration', 'global');
+        cy.wait(1000);
+        cy.contains('a', 'Modules').should('be.visible').click();
+        cy.wait(1000);
+        cy.clickModuleEditIcon('Voters Role');
+        cy.wait(1000);
+        cy.ensureVotersRollCheckboxChecked();
+        cy.wait(1000);
+        cy.clickLastSaveButton();
+        cy.wait(1000);
+        // After setup, navigate again to create member
+        cy.sideNav('Members', 'members/create');
+        cy.contains('p', 'Verify an ID number with the IEC.').should('be.visible');
+      }
+    });
+    cy.wait(500);
     cy.get('input[id="verify_id_number"]').should('be.visible').type(memberFixture.id_number);
     cy.wait(1000);
     cy.contains('button', 'Verify with IEC').should('be.visible').click();
-    cy.wait(4000);
+    cy.wait(3000);
     cy.contains('button', 'Create Member').should('be.visible').click();
     cy.wait(1000);
   });
