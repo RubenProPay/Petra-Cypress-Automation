@@ -60,6 +60,7 @@ module.exports = defineConfig({
     viewportWidth: 1920,
     viewportHeight: 1080,
     baseUrl: "https://staging.political.propaysystems.com/",
+    // baseUrl: "https://qa.petra.propaysystems.com/",
     // baseUrl: "https://vfplus.datakrag.co.za/",
     experimentalStudio: true,
   },

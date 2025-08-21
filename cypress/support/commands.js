@@ -18,20 +18,25 @@ Cypress.Commands.add('sideNavExpand', (...labels) => {
   labels.slice(0, -1).forEach((label) => {
     cy.contains('span', label, { timeout: 10000 })
       .parents('button')
+      .scrollIntoView()
       .click({ force: true });
   });
 
   const last = labels[labels.length - 1];
-  cy.contains('a,button', last, { timeout: 10000 }).click({ force: true });
+  cy.contains('a,button', last, { timeout: 10000 })
+    .scrollIntoView()
+    .click({ force: true });
 });
 
 // Side navigation
 Cypress.Commands.add('sideNav', (module, page) => {
   cy.contains('span', module)
     .parents('button')
+    .scrollIntoView()
     .click({ force: true });
   cy.get(`a[href="${Cypress.config().baseUrl + page}"]`)
     .last()
+    .scrollIntoView()
     .should('be.visible')
     .click();
   cy.url().should('eq', Cypress.config().baseUrl + page);
@@ -40,6 +45,7 @@ Cypress.Commands.add('sideNav', (module, page) => {
 Cypress.Commands.add('sideNavPrd', (module, page) => {
   cy.contains('span', module)
     .parents('button')
+    .scrollIntoView()
     .click({ force: true });
 
   const isAbsoluteUrl = page.startsWith('http');
@@ -49,6 +55,7 @@ Cypress.Commands.add('sideNavPrd', (module, page) => {
 
   cy.get(`a[href="${targetHref}"]`)
     .last()
+    .scrollIntoView()
     .should('be.visible')
     .click();
 
