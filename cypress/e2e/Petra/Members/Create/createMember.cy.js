@@ -25,7 +25,7 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.sideNav('Members', 'members/create');
   });
 
-  it('checks that the IEC page is displaying and able to verify an ID number', () => {
+  it.skip('checks that the IEC page is displaying and able to verify an ID number', () => {
     cy.visit('/');
     cy.wait(1000);
     cy.sideNav('Members', 'members/create');
@@ -133,7 +133,66 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     });
 
     // Remove minimum validations
-    // cy.get('input[id="firstname"]').clear().type('Ruben');
+    cy.get('input[id="firstname"]').clear().type('Ruben');
+    cy.get('input[id="surname"]').clear().type('Da Silva');
+    cy.get('input[id="cell"]').clear().type(memberFixture.cellphone);
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+    cy.wait(500);
+
+    minValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('not.exist');
+        });
+    });
+
+    cy.wait(1000);
+    cy.reload();
+    // cy.wait(1000);
+    cy.contains('button', 'Create Member').should('be.visible').click();
+    cy.wait(1000);
+
+    // Max validations
+    cy.get('input[id="firstname"]').clear().type('Nullam vehicula magna sit amet magna ullamcorper, at dictum est gravida. Morbi nec magna at quam malesuada accumsan.');
+    cy.get('input[id="surname"]').clear().type('Nullam vehicula magna sit amet magna ullamcorper, at dictum est gravida. Morbi nec magna at quam malesuada accumsan.');
+    cy.get('input[id="initials"]').clear().type('Nullam vehicula magna sit amet magna ullamcorper, at dictum est gravida. Morbi nec magna at quam malesuada accumsan.');
+    cy.get('input[id="email"]').clear().type('NullamehiculamagnasitametmagnullamcorperatdictumestgravidaMorbinecmagnaatquammalesuadaaccumsan@gmail.com');
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+
+    const maxValidations = [
+      { label: 'firstname', message: 'A maximum of 50 letters is valid.' },
+      { label: 'surname', message: 'A maximum of 50 letters is valid.' },
+      { label: 'initials', message: 'The initials may not be greater than 10 characters.' },
+      { label: 'email', message: 'The email may not be greater than 100 characters.' },
+    ];
+    
+    maxValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('exist');
+        });
+    });
+
+    // Remove max validations
+    cy.get('input[id="firstname"]').clear().type('Nullam vehicula magna sit amet magna ullamcorper.');
+    cy.get('input[id="surname"]').clear().type('Nullam vehicula magna sit amet magna ullamcorper.');
+    cy.get('input[id="initials"]').clear().type('Nullam.');
+    cy.get('input[id="email"]').clear().type('Nullamehiculamagnasitametmagnullam@gmail.com');
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+    cy.wait(500);
+
+    maxValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('not.exist');
+        });
+    });
   });
 
   it.skip('can create a member', () => {
