@@ -193,6 +193,93 @@ describe('Navigate to Create Member Page & Create a Member', () => {
           cy.contains(message).should('not.exist');
         });
     });
+
+    cy.wait(1000);
+    cy.reload();
+    // cy.wait(1000);
+    cy.contains('button', 'Create Member').should('be.visible').click();
+    cy.wait(1000);
+
+    // Valid value validations
+    cy.get('input[id="id_number"]').should('be.visible').type('1212127890123');
+    cy.get('input[id="cell"]').scrollIntoView().should('be.visible').type('0000000000');
+    cy.get('input[id="email"]').scrollIntoView().should('be.visible').type('QuamMalesuadaAccumsan1234567');
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+    cy.wait(500);
+
+    const validValueValidations = [
+      { label: 'id_number', message: 'The id number is not a valid ID number.' },
+            { label: 'cell', message: 'The cellphone must be a valid cellphone number in the format: 2782xxxxxxx or 082xxxxxxx.' },
+      { label: 'email', message: 'The email must be a valid email address.' }
+    ];
+
+    validValueValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('exist');
+        });
+    });
+
+    // Remove valid value validations
+    cy.get('input[id="id_number"]').clear().type('9311177311083');
+    cy.get('input[id="cell"]').clear().type(memberFixture.cellphone);
+    cy.get('input[id="email"]').clear().type(memberFixture.email);
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+    cy.wait(500);
+
+    validValueValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('not.exist');
+        });
+    });
+
+    cy.wait(1000);
+    cy.reload();
+    // cy.wait(1000);
+    cy.contains('button', 'Create Member').should('be.visible').click();
+    cy.wait(1000);
+
+    // Unique validations
+    cy.get('input[id="id_number"]').scrollIntoView().clear().type('8706225138084');
+    // should also apply for member cell when dev has fixed it
+    cy.get('input[id="email"]').scrollIntoView().clear().type('Aaarloo@vodamail.co.za');
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+    cy.wait(1000);
+
+    const uniqueValidations = [
+      { label: 'id_number', message: 'The id number has already been taken.' },
+      // include label for cell number when dev has fixed it
+      { label: 'email', message: 'The email has already been taken.' },
+    ];
+
+    uniqueValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('exist');
+        });
+    });
+
+    // Remove unique validations
+    cy.get('input[id="id_number"]').scrollIntoView().clear().type(memberFixture.id_number);
+    cy.get('input[id="email"]').scrollIntoView().clear().type(memberFixture.email);
+    cy.contains('button', 'Save').scrollIntoView().should('be.visible').click( { force: true });
+    cy.wait(500);
+
+    uniqueValidations.forEach(({ label, message }) => {
+      cy.get(`label[for='${label}']`)
+        .last()
+        .parent()
+        .within(() => {
+          cy.contains(message).should('not.exist');
+        });
+    });
   });
 
   it.skip('can create a member', () => {
