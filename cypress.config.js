@@ -26,17 +26,17 @@ module.exports = defineConfig({
         },
         generateMember() {
           const member_type = faker.helpers.arrayElement(['Active Member', 'Non member', 'Normal Member', 'Supporter']);
-          const first_name = faker.person.firstName();
+          const firstname = faker.person.firstName();
           const surname = faker.person.lastName();
           const title = faker.helpers.arrayElement(['Dr.', 'Ds.', 'Miss.', 'Mr.', 'Mrs.', 'Ms.']);
           const gender = faker.helpers.arrayElement(['Male', 'Female']);
           const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
-          const email = faker.internet.email({ firstName: first_name, lastName: surname }).toLowerCase();
+          const email = faker.internet.email({ firstName: firstname, lastName: surname }).toLowerCase();
           const address = {
-            street: faker.location.streetAddress(),
-            suburb: faker.location.secondaryAddress(),
-            city: faker.location.city(),
-            code: faker.location.zipCode(),
+            address2: faker.location.streetAddress(),
+            address3: faker.location.secondaryAddress(),
+            address4: faker.location.city(),
+            address5: faker.location.zipCode(),
             province: faker.helpers.arrayElement([
               'Eastern Cape', 'Free State', 'Gauteng', 'International', 'KwaZulu-Natal',
               'Limpopo', 'Mpumalanga', 'North West', 'Northern Cape', 'Unknown', 'Western Cape'
@@ -44,7 +44,7 @@ module.exports = defineConfig({
           };
           return {
             member_type,
-            first_name,
+            firstname,
             surname,
             title,
             gender,

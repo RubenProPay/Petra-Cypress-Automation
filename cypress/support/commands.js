@@ -140,6 +140,48 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
   cy.wait(300);
 });
 
+// Searchable dropdowns (Member Create)
+Cypress.Commands.add('searchableDropdownMC', (labelFor, labelText, item, options = { clear: false }) => {
+  const fullItemText = item;
+
+  const container = cy.get(`div[form-wrapper="${labelFor}"]`);
+  if (options.clear) {
+    container.find('div[name="form.wrapper.container.append"]')
+      .find('button')
+      .first()
+      .click({ force: true });
+    cy.wait(300);
+  }
+
+  // First attempt to open dropdown
+  cy.contains('label', labelText)
+    .should('be.visible')
+    .click({ force: true });
+
+  cy.wait(200);
+
+  // Click away to trigger stabilization (e.g. click the name input)
+  cy.get('input[id="firstname"]').click({ force: true });
+
+  cy.wait(300);
+
+  // Re-click the dropdown to force Alpine to settle
+  cy.contains('label', labelText)
+    .click({ force: true });
+
+  cy.get('.max-h-80:visible input[type="search"]', { timeout: 4000 })
+    .should('be.visible')
+    .click({ force: true })
+    .clear()
+    .type(fullItemText, { delay: 100, force: true });
+
+  cy.contains('.max-h-80:visible div', fullItemText, { timeout: 6000 })
+    .should('be.visible')
+    .click({ force: true });
+
+  cy.wait(300);
+});
+
 // Generating SA ID
 Cypress.Commands.add('generateSAID', () => {
   const generateSAID = () => {

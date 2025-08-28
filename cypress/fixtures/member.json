@@ -9,10 +9,10 @@
   "cellphone": "0821234567",
   "email": "john.doe@example.com",
   "address": {
-    "street": "123 Main Street",
-    "suburb": "Central",
-    "city": "Johannesburg",
-    "code": "2000",
+    "adress2": "123 Main Street",
+    "address3": "Central",
+    "address4": "Johannesburg",
+    "address5": "2000",
     "province": "Gauteng"
   }
 }

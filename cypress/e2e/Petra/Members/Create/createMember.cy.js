@@ -19,7 +19,7 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.wait(1000);
   });
 
-  it.skip('opens the members module and clicks create', () => {
+  it('opens the members module and clicks create', () => {
     cy.visit('/');
     cy.wait(1000);
     cy.sideNav('Members', 'members/create');
@@ -69,7 +69,7 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.wait(1000);
   });
 
-  it('can verify ALL validations on the member creation', () => {
+  it.skip('can verify ALL validations on the member creation', () => {
     cy.visit('/members/create');
     cy.wait(1000);
     cy.contains('button', 'Create Member').should('be.visible').click();
@@ -282,23 +282,24 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     });
   });
 
-  it.skip('can create a member', () => {
+  it('can create a member', () => {
     cy.visit('/members/create');
     cy.wait(1000);
+    cy.contains('button', 'Create Member').should('be.visible').click();
+    cy.wait(1000);
     cy.get('input[id="id_number"]').should('be.visible').type(memberFixture.id_number);
-    cy.dropdown('member_type', 'Member Type', memberFixture.member_type, { clear: true });
+    cy.dropdown('member_type_id', 'Member type *', memberFixture.member_type, { clear: true });
     cy.get('input[id="firstname"]').type(memberFixture.firstname);
     cy.get('input[id="surname"]').type(memberFixture.surname);
-    cy.dropdown('title', 'Title', memberFixture.title, { clear: true });
-    cy.dropdown('gender', 'Gender', memberFixture.gender, { clear: true });
-    cy.dropdown('language', 'Language', memberFixture.language, { clear: true });
-    cy.get('input[id="cellphone"]').type(memberFixture.cellphone);
+    cy.dropdown('title_id', 'Title', memberFixture.title, { clear: true });
+    cy.dropdown('gender_id', 'Gender', memberFixture.gender, { clear: true });
+    cy.dropdown('language_id', 'Language', memberFixture.language, { clear: true });
+    cy.get('input[id="cell"]').type(memberFixture.cellphone);
     cy.get('input[id="email"]').type(memberFixture.email);
-    cy.get('input[id="street"]').type(memberFixture.address.street);
-    cy.get('input[id="suburb"]').type(memberFixture.address.suburb);
-    cy.get('input[id="city"]').type(memberFixture.address.city);
-    cy.get('input[id="code"]').type(memberFixture.address.code);
-    cy.dropdown('province', 'Province', memberFixture.address.province, { clear: true });
-    cy.contains('button', 'Submit').should('be.visible').click();
+    cy.get('input[id="address2"]').type(memberFixture.address.address2);
+    cy.get('input[id="address3"]').type(memberFixture.address.address3);
+    cy.get('input[id="address4"]').type(memberFixture.address.address4);
+    cy.get('input[id="address5"]').type(memberFixture.address.address5);
+    cy.searchableDropdownMC('province_id', 'Province', memberFixture.address.province);
   });
 });
