@@ -25,9 +25,9 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.sideNav('Members', 'members/create');
   });
 
-  it.skip('checks that the IEC page is displaying and able to verify an ID number', () => {
+  it('checks that the IEC page is displaying', () => {
     cy.visit('/');
-    cy.wait(1000);
+    // cy.wait(1000);
     cy.sideNav('Members', 'members/create');
     cy.wait(1000);
     cy.get('body').then(($body) => {
@@ -44,12 +44,7 @@ describe('Navigate to Create Member Page & Create a Member', () => {
         cy.wait(1000);
         cy.contains('button', 'Save').should('be.visible').click();
         cy.wait(2000);
-        cy.visit('/');
-        cy.wait(1000);
-        cy.sideNavPrd('Administration', 'global');
-        cy.wait(1000);
-        cy.contains('a', 'Modules').should('be.visible').click();
-        cy.wait(1000);
+        cy.reload();
         cy.clickModuleEditIcon('Voters Role');
         cy.wait(1000);
         cy.ensureVotersRollCheckboxChecked();
@@ -60,16 +55,9 @@ describe('Navigate to Create Member Page & Create a Member', () => {
         cy.contains('p', 'Verify an ID number with the IEC.').should('be.visible');
       }
     });
-    cy.wait(500);
-    cy.get('input[id="verify_id_number"]').should('be.visible').type(memberFixture.id_number);
-    cy.wait(1000);
-    cy.contains('button', 'Verify with IEC').should('be.visible').click();
-    cy.wait(3000);
-    cy.contains('button', 'Create Member').should('be.visible').click();
-    cy.wait(1000);
   });
 
-  it.skip('can verify ALL validations on the member creation', () => {
+  it('can verify ALL validations on the member creation', () => {
     cy.visit('/members/create');
     cy.wait(1000);
     cy.contains('button', 'Create Member').should('be.visible').click();
@@ -285,9 +273,11 @@ describe('Navigate to Create Member Page & Create a Member', () => {
   it('can create a member', () => {
     cy.visit('/members/create');
     cy.wait(1000);
+    cy.get('input[id="verify_id_number"]').should('be.visible').type(memberFixture.id_number);
+    cy.contains('button', 'Verify with IEC').should('be.visible').click();
+    cy.wait(3000);
     cy.contains('button', 'Create Member').should('be.visible').click();
     cy.wait(1000);
-    cy.get('input[id="id_number"]').should('be.visible').type(memberFixture.id_number);
     cy.dropdown('member_type_id', 'Member type *', memberFixture.member_type, { clear: true });
     cy.get('input[id="firstname"]').type(memberFixture.firstname);
     cy.get('input[id="surname"]').type(memberFixture.surname);
