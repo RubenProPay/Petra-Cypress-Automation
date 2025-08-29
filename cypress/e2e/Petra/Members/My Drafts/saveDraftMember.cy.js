@@ -19,15 +19,11 @@ describe('Navigate to Create Member Page & Save a Draft Member', () => {
     cy.wait(1000);
   });
 
-  it('can create a draft member', () => {
+  it('can save a draft member', () => {
     cy.visit('/members/create');
-    // cy.wait(1000);
-    // cy.get('input[id="verify_id_number"]').should('be.visible').type(memberFixture.id_number);
-    // cy.contains('button', 'Verify with IEC').should('be.visible').click();
-    // cy.wait(3000);
     cy.contains('button', 'Create Member').should('be.visible').click();
     cy.wait(1000);
-    cy.get('input[id="verify_id_number"]').should('be.visible').type(memberFixture.id_number);
+    cy.get('input[id="id_number"]').should('be.visible').type(memberFixture.id_number);
     cy.dropdown('member_type_id', 'Member type *', memberFixture.member_type, { clear: true });
     cy.get('input[id="firstname"]').type(memberFixture.firstname);
     cy.get('input[id="surname"]').type(memberFixture.surname);
