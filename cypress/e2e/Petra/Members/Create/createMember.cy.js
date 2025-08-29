@@ -301,5 +301,6 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.get('input[id="address4"]').type(memberFixture.address.address4);
     cy.get('input[id="address5"]').type(memberFixture.address.address5);
     cy.searchableDropdownMC('province_id', 'Province', memberFixture.address.province);
+    cy.get('button:visible').filter((i, el) => Cypress.$(el).text().trim() === 'Save').first().scrollIntoView().should('be.visible').click({ force: true });
   });
 });
