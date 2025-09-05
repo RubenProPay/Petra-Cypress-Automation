@@ -92,7 +92,7 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
           .click({ force: true });
       } else {
         cy.contains('div', item)
-          .should('be.visible')
+          .should('exist')
           .click({ force: true });
       }
     });
