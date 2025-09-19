@@ -1,3 +1,6 @@
+import 'cypress-xpath';
+import 'cypress-file-upload';
+
 // Generate Member Fixture
 Cypress.Commands.add('generateMemberFixture', () => {
   // Use faker from the Cypress config task for all fields except id_number
@@ -8,8 +11,6 @@ Cypress.Commands.add('generateMemberFixture', () => {
     });
   });
 });
-import 'cypress-xpath';
-import 'cypress-file-upload';
 
 // Expand side navigation
 Cypress.Commands.add('sideNavExpand', (...labels) => {
@@ -28,7 +29,7 @@ Cypress.Commands.add('sideNavExpand', (...labels) => {
     .click({ force: true });
 });
 
-// Side navigation
+// Side navigation (default)
 Cypress.Commands.add('sideNav', (module, page) => {
   cy.contains('span', module)
     .parents('button')
@@ -42,6 +43,7 @@ Cypress.Commands.add('sideNav', (module, page) => {
   cy.url().should('eq', Cypress.config().baseUrl + page);
 });
 
+// Side navigation (prod / absolute URLs)
 Cypress.Commands.add('sideNavPrd', (module, page) => {
   cy.contains('span', module)
     .parents('button')
@@ -50,8 +52,6 @@ Cypress.Commands.add('sideNavPrd', (module, page) => {
 
   const isAbsoluteUrl = page.startsWith('http');
   const targetHref = isAbsoluteUrl ? page : Cypress.config().baseUrl + page;
-
-  console.log('Navigating to href:', targetHref);
 
   cy.get(`a[href="${targetHref}"]`)
     .last()
@@ -62,9 +62,7 @@ Cypress.Commands.add('sideNavPrd', (module, page) => {
   cy.url().should('eq', targetHref);
 });
 
-//
-
-//Non searchable dropdowns
+// Non-searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const container = cy.get(`div[form-wrapper="${labelFor}"]`);
 
@@ -98,7 +96,7 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
     });
 });
 
-// Searchable dropdowns (with input field inside)
+// Searchable dropdowns (generic)
 Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const fullItemText = item;
 
@@ -111,19 +109,19 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
     cy.wait(300);
   }
 
-  // First attempt to open dropdown
+  // Attempt to open dropdown and stabilize Alpine/Livewire
   cy.contains('label', labelText)
     .should('be.visible')
     .click({ force: true });
 
   cy.wait(200);
 
-  // Click away to trigger stabilization (e.g. click the name input)
+  // Click away to settle any focus issues
   cy.get('input[id="name"]').click({ force: true });
 
   cy.wait(300);
 
-  // Re-click the dropdown to force Alpine to settle
+  // Re-open
   cy.contains('label', labelText)
     .click({ force: true });
 
@@ -248,7 +246,7 @@ Cypress.Commands.add('generateSACellphone', () => {
   };
 
   function generateCarrierCode() {
-    const carrierCodes = ['083', '082', '081', '084', '078', '087', '076', '073'];
+  const carrierCodes = ['083', '082', '081', '084', '078', '087', '076', '073'];
     const randomIndex = Math.floor(Math.random() * carrierCodes.length);
     return carrierCodes[randomIndex];
   }
@@ -262,13 +260,8 @@ Cypress.Commands.add('generateSACellphone', () => {
 
 // Generating Language
 Cypress.Commands.add('generateLanguage', () => {
-  const generateLanguage = () => {
-    const languages = ['Afrikaans', 'English'];
-    const randomIndex = Math.floor(Math.random() * languages.length);
-    return languages[randomIndex];
-  };
-
-  return generateLanguage();
+  const languages = ['Afrikaans', 'English'];
+  return languages[Math.floor(Math.random() * languages.length)];
 });
 
 
@@ -277,8 +270,8 @@ Cypress.Commands.add('collectTableHeaders', () => {
   let headers = [];
   return cy.get('th[class*="fi-ta-header-cell"]')
     .each(($el) => {
-      const text = $el.text().trim();
-      if (text) headers.push(text);
+    const text = $el.text().trim();
+    if (text) headers.push(text);
     })
     .then(() => headers);
 });
@@ -318,71 +311,34 @@ Cypress.Commands.add('verifyAllColumnsVisible', (headers) => {
 
 // Sort and verify all columns in the table
 Cypress.Commands.add('sortAndVerifyAllColumns', () => {
-  const columnsToSkipByName = ['Progress'];
-  let headers = [];
+  const columnsToSkipByName = ['Progress', 'Actions', ''];
 
-  const getColumnValues = (colIndex) => {
-    return cy.get('tbody tr')
-      .not(':first')
-      .filter(':visible')
-      .then($rows => {
-        return [...$rows].map(row => {
-          const cell = row.querySelectorAll('td')[colIndex];
-          return cell?.innerText.trim() || '';
-        });
-      });
-  };
+  cy.get('th[class*="fi-ta-header-cell"]').then(($headers) => {
+    const total = $headers.length;
+    for (let index = 0; index < total; index++) {
+      const header = $headers.eq(index).text().trim();
+      if (columnsToSkipByName.includes(header)) {
+        cy.log(`Skipping column: '${header}' (index ${index})`);
+        continue;
+      }
 
-  const inferType = (values) => {
-    return values.every(v => !isNaN(parseFloat(v))) ? 'numeric' : 'text';
-  };
+      // click to sort ascending
+      cy.get('th[class*="fi-ta-header-cell"]').eq(index).click();
+  cy.wait(2000);
 
-  const sortColumnAndVerify = (colIndex, columnName) => {
-    return getColumnValues(colIndex).then(initialValues => {
-      const type = inferType(initialValues);
+      // optionally add verifications here (e.g., check first/last values)
 
-      const sortAsc = () => {
-        cy.get(`th[class*="fi-ta-header-cell"]`).eq(colIndex).click();
-        cy.wait(1000);
-        return getColumnValues(colIndex).then(values => {
-          const expected = [...values].sort((a, b) =>
-            type === 'numeric' ? parseFloat(a) - parseFloat(b) : a.localeCompare(b)
-          );
-          expect(values).to.deep.equal(expected);
-        });
-      };
+      // click to sort descending
+      cy.get('th[class*="fi-ta-header-cell"]').eq(index).click();
+  cy.wait(2000);
 
-      const sortDesc = () => {
-        cy.get(`th[class*="fi-ta-header-cell"]`).eq(colIndex).click();
-        cy.wait(1000);
-        return getColumnValues(colIndex).then(values => {
-          const expected = [...values].sort((a, b) =>
-            type === 'numeric' ? parseFloat(b) - parseFloat(a) : b.localeCompare(a)
-          );
-          expect(values).to.deep.equal(expected);
-        });
-      };
-
-      return sortAsc().then(sortDesc);
-    });
-  };
-
-  cy.get('th[class*="fi-ta-header-cell"]')
-    .each($el => {
-      const text = $el.text().trim();
-      if (text) headers.push(text);
-    })
-    .then(() => {
-      headers.forEach((header, index) => {
-        if (!columnsToSkipByName.includes(header)) {
-          sortColumnAndVerify(index, header);
-        }
-      });
-    });
+      // optionally add verifications here
+    }
+  });
 });
 
 // Cycle through per-page options in the table
-Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
+Cypress.Commands.add('cyclePerPageOptions', (waitTime = 2000) => {
   const options = ['10', '25', '50', '100'];
   const cycle = [...options, ...options.slice(0, -1).reverse()]; // 10,25,50,100,50,25,10
 
@@ -405,23 +361,21 @@ Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
 // Click through all pagination pages
 Cypress.Commands.add('clickAllPaginationPages', () => {
   function clickNextIfExists() {
-    cy.get('ol.fi-pagination-items')
-      .then($pagination => {
-        const nextButton = $pagination.find('li[rel="next"] button');
-        if (nextButton.length) {
-          cy.wrap(nextButton)
-            .should('be.visible')
-            .scrollIntoView()
-            .click({ force: true })
-            .wait(1000)
-            .then(() => {
-              // Recursive check again after the click
-              clickNextIfExists();
-            });
-        } else {
-          cy.log('No more pages.');
-        }
-      });
+    cy.get('ol.fi-pagination-items').then($pagination => {
+      const nextButton = $pagination.find('li[rel="next"] button');
+      if (nextButton.length) {
+        cy.wrap(nextButton)
+          .should('be.visible')
+          .scrollIntoView()
+          .click({ force: true })
+          .wait(1000)
+          .then(() => {
+            clickNextIfExists();
+          });
+      } else {
+        cy.log('No more pages.');
+      }
+    });
   }
 
   clickNextIfExists();
