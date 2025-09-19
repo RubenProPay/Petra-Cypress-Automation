@@ -5,7 +5,7 @@ describe('Correct Member Type Check', () => {
     cy.wait(1000);
   });
 
-  it.skip('searches for a member on the system', () => {
+  it('searches for a member on the system', () => {
     cy.fixture('membersearchtable').then((members) => {
       const member = members[Math.floor(Math.random() * members.length)];
 
@@ -42,7 +42,7 @@ describe('Correct Member Type Check', () => {
     });
   });
 
-  it.skip('shows/hides the columns', () => {
+  it('shows/hides the columns', () => {
     cy.visit('members/member');
 
     cy.collectTableHeaders().then((headers) => {
@@ -64,14 +64,14 @@ describe('Correct Member Type Check', () => {
     cy.sortAndVerifyAllColumns();
   });
 
-  it.skip('cycles through per page dropdown', () => {
+  it('cycles through per page dropdown', () => {
     cy.visit('members/member');
     cy.cyclePerPageOptions(2000);
   });
 
-  it.skip('clicks the "Next" page button', () => {
+  it('clicks the "Next" page button', () => {
     cy.visit('members/member');
-    cy.clickAllPaginationPages();
+    cy.clickAllPaginationPages(5);
     cy.wait(1000);
   });
 

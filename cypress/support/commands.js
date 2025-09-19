@@ -358,18 +358,29 @@ Cypress.Commands.add('cyclePerPageOptions', (waitTime = 2000) => {
     });
 });
 
-// Click through all pagination pages
-Cypress.Commands.add('clickAllPaginationPages', () => {
+// Click through a limited number of pagination pages
+Cypress.Commands.add('clickAllPaginationPages', (maxPages = 10) => {
+  let pageCount = 0;
   function clickNextIfExists() {
+    if (pageCount >= maxPages) {
+      cy.log(`Reached maxPages limit: ${maxPages}`);
+      return;
+    }
     cy.get('ol.fi-pagination-items').then($pagination => {
       const nextButton = $pagination.find('li[rel="next"] button');
       if (nextButton.length) {
+        // Scroll to the bottom of the page to ensure visibility
+        cy.window().then(win => {
+          win.scrollTo(0, document.body.scrollHeight);
+        });
+        cy.wait(500);
         cy.wrap(nextButton)
-          .should('be.visible')
           .scrollIntoView()
+          .should('be.visible')
           .click({ force: true })
-          .wait(1000)
+          .wait(1500)
           .then(() => {
+            pageCount++;
             clickNextIfExists();
           });
       } else {
