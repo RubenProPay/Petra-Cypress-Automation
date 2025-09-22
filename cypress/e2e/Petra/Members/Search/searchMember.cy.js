@@ -1,4 +1,4 @@
-describe('Correct Member Type Check', () => {
+describe('Navigate & Search For a Petra member', () => {
   beforeEach(() => {
     cy.loginRoot();
     cy.visit('/');
