@@ -68,4 +68,23 @@ describe('Navigate and Freeze a Petra Member', () => {
 
     });
 
+    it('submits that rejoined member for approval', () => {
+      cy.visit('/');
+      cy.sideNav('Members', 'members/member');
+      cy.wait(2000);
+      
+      cy.contains('td', '2208002541')
+        .parents('tr')
+        .within(() => {
+          cy.contains('a', '2208002541').click({ force: true });
+        });
+
+      cy.contains('a', 'Personal Details').should('be.visible');
+      cy.wait(1000);
+
+      cy.get('button:visible').filter((i, el) => Cypress.$(el).text().trim() === 'Submit for Approval').first().scrollIntoView().should('be.visible').click({ force: true });
+      cy.wait(500);
+      cy.get('button:visible').filter((i, el) => Cypress.$(el).text().trim() === 'Yes, I confirm').first().should('be.visible').click({ force: true });
+      cy.wait(500);
+    });
 });
