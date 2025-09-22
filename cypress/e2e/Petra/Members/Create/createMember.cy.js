@@ -278,7 +278,7 @@ describe('Navigate to Create Member Page & Create a Member', () => {
     cy.wait(3000);
     cy.contains('button', 'Create Member').should('be.visible').click();
     cy.wait(1000);
-    cy.dropdown('member_type_id', 'Member type *', memberFixture.member_type, { clear: true });
+    cy.dropdown('member_type_id', 'Contact type *', memberFixture.member_type, { clear: true });
     cy.get('input[id="firstname"]').type(memberFixture.firstname);
     cy.get('input[id="surname"]').type(memberFixture.surname);
     cy.dropdown('title_id', 'Title', memberFixture.title, { clear: true });
