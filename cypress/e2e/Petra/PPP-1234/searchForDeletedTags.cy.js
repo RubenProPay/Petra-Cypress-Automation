@@ -118,7 +118,7 @@ describe('Check deleted tags in /tags', () => {
       }
       logLines.push('');
       logLines.push(summary);
-      cy.writeFile('cypress/logs/tags_search_results.log', logLines.join('\n'));
+      cy.writeFile('cypress/logs/PRDV2_tags_search_results.log', logLines.join('\n'));
     });
   });
 });
