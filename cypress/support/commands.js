@@ -3,7 +3,6 @@ import 'cypress-file-upload';
 
 // Generate Member Fixture
 Cypress.Commands.add('generateMemberFixture', () => {
-  // Use faker from the Cypress config task for all fields except id_number
   return cy.task('generateMember').then((member) => {
     return cy.generateSAID().then((id_number) => {
       member.id_number = id_number;
@@ -109,19 +108,16 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
     cy.wait(300);
   }
 
-  // Attempt to open dropdown and stabilize Alpine/Livewire
   cy.contains('label', labelText)
     .should('be.visible')
     .click({ force: true });
 
   cy.wait(200);
 
-  // Click away to settle any focus issues
   cy.get('input[id="name"]').click({ force: true });
 
   cy.wait(300);
 
-  // Re-open
   cy.contains('label', labelText)
     .click({ force: true });
 
@@ -151,19 +147,16 @@ Cypress.Commands.add('searchableDropdownMC', (labelFor, labelText, item, options
     cy.wait(300);
   }
 
-  // First attempt to open dropdown
   cy.contains('label', labelText)
     .should('be.visible')
     .click({ force: true });
 
   cy.wait(200);
 
-  // Click away to trigger stabilization (e.g. click the name input)
   cy.get('input[id="firstname"]').click({ force: true });
 
   cy.wait(300);
 
-  // Re-click the dropdown to force Alpine to settle
   cy.contains('label', labelText)
     .click({ force: true });
 
@@ -289,7 +282,7 @@ Cypress.Commands.add('toggleAllColumns', () => {
   });
 
   cy.wait(500);
-  cy.get('body').click(0, 0); // Close menu
+  cy.get('body').click(0, 0);
   cy.wait(500);
 
   cy.get('button[title="Toggle columns"]').click();
@@ -322,17 +315,10 @@ Cypress.Commands.add('sortAndVerifyAllColumns', () => {
         continue;
       }
 
-      // click to sort ascending
       cy.get('th[class*="fi-ta-header-cell"]').eq(index).click();
   cy.wait(2000);
-
-      // optionally add verifications here (e.g., check first/last values)
-
-      // click to sort descending
       cy.get('th[class*="fi-ta-header-cell"]').eq(index).click();
   cy.wait(2000);
-
-      // optionally add verifications here
     }
   });
 });
@@ -369,7 +355,6 @@ Cypress.Commands.add('clickAllPaginationPages', (maxPages = 10) => {
     cy.get('ol.fi-pagination-items').then($pagination => {
       const nextButton = $pagination.find('li[rel="next"] button');
       if (nextButton.length) {
-        // Scroll to the bottom of the page to ensure visibility
         cy.window().then(win => {
           win.scrollTo(0, document.body.scrollHeight);
         });
