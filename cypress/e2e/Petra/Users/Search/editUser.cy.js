@@ -4,7 +4,7 @@ let currentLanguage;
 before(() => {
   cy.fixture('user').then((user) => {
     userFixture = user;
-    currentLanguage = user.language; // Track the current language
+    currentLanguage = user.language;
   });
 });
 
