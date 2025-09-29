@@ -1,4 +1,4 @@
-describe('Correct Member Type Check', () => {
+describe('Navigate & Search For a Petra member', () => {
   beforeEach(() => {
     cy.loginRoot();
     cy.visit('/');
@@ -9,13 +9,14 @@ describe('Correct Member Type Check', () => {
     cy.fixture('membersearchtable').then((members) => {
       const member = members[Math.floor(Math.random() * members.length)];
 
+      // Exclude '--' values from being searched
       const searchableFields = [
         member["ID Number"],
         member["Cell phone number"],
         member["Email"],
         member["Member Number"],
         member["Old Member No."]
-      ].filter(Boolean);
+      ].filter((val) => val && val !== "--");
 
       const randomValue =
         searchableFields[Math.floor(Math.random() * searchableFields.length)];
@@ -40,4 +41,38 @@ describe('Correct Member Type Check', () => {
       cy.wait(1000);
     });
   });
+
+  it('shows/hides the columns', () => {
+    cy.visit('members/member');
+
+    cy.collectTableHeaders().then((headers) => {
+      cy.toggleAllColumns();
+
+      // Close menu and reopen to simulate real user behavior
+      cy.get('body').click(0, 0);
+      cy.wait(1000);
+      cy.get('button[title="Toggle columns"]').click();
+      cy.wait(500);
+
+      cy.toggleAllColumns(true); // Restore
+      cy.verifyAllColumnsVisible(headers);
+    });
+  });
+
+  it('sorts all columns ascending and descending', () => {
+    cy.visit('members/member');
+    cy.sortAndVerifyAllColumns();
+  });
+
+  it('cycles through per page dropdown', () => {
+    cy.visit('members/member');
+    cy.cyclePerPageOptions(2000);
+  });
+
+  it('clicks the "Next" page button', () => {
+    cy.visit('members/member');
+    cy.clickAllPaginationPages(5);
+    cy.wait(1000);
+  });
+
 });

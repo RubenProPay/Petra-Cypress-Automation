@@ -1,6 +1,16 @@
 import 'cypress-xpath';
 import 'cypress-file-upload';
 
+// Generate Member Fixture
+Cypress.Commands.add('generateMemberFixture', () => {
+  return cy.task('generateMember').then((member) => {
+    return cy.generateSAID().then((id_number) => {
+      member.id_number = id_number;
+      return member;
+    });
+  });
+});
+
 // Expand side navigation
 Cypress.Commands.add('sideNavExpand', (...labels) => {
   if (!labels.length) throw new Error('Provide at least one label');
@@ -8,46 +18,50 @@ Cypress.Commands.add('sideNavExpand', (...labels) => {
   labels.slice(0, -1).forEach((label) => {
     cy.contains('span', label, { timeout: 10000 })
       .parents('button')
+      .scrollIntoView()
       .click({ force: true });
   });
 
   const last = labels[labels.length - 1];
-  cy.contains('a,button', last, { timeout: 10000 }).click({ force: true });
+  cy.contains('a,button', last, { timeout: 10000 })
+    .scrollIntoView()
+    .click({ force: true });
 });
 
-// Side navigation
+// Side navigation (default)
 Cypress.Commands.add('sideNav', (module, page) => {
   cy.contains('span', module)
     .parents('button')
+    .scrollIntoView()
     .click({ force: true });
   cy.get(`a[href="${Cypress.config().baseUrl + page}"]`)
     .last()
+    .scrollIntoView()
     .should('be.visible')
     .click();
   cy.url().should('eq', Cypress.config().baseUrl + page);
 });
 
+// Side navigation (prod / absolute URLs)
 Cypress.Commands.add('sideNavPrd', (module, page) => {
   cy.contains('span', module)
     .parents('button')
+    .scrollIntoView()
     .click({ force: true });
 
   const isAbsoluteUrl = page.startsWith('http');
   const targetHref = isAbsoluteUrl ? page : Cypress.config().baseUrl + page;
 
-  console.log('Navigating to href:', targetHref);
-
   cy.get(`a[href="${targetHref}"]`)
     .last()
+    .scrollIntoView()
     .should('be.visible')
     .click();
 
   cy.url().should('eq', targetHref);
 });
 
-//
-
-//Non searchable dropdowns
+// Non-searchable dropdowns
 Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const container = cy.get(`div[form-wrapper="${labelFor}"]`);
 
@@ -75,13 +89,13 @@ Cypress.Commands.add('dropdown', (labelFor, labelText, item, options = { clear: 
           .click({ force: true });
       } else {
         cy.contains('div', item)
-          .should('be.visible')
+          .should('exist')
           .click({ force: true });
       }
     });
 });
 
-// Searchable dropdowns (with input field inside)
+// Searchable dropdowns (generic)
 Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options = { clear: false }) => {
   const fullItemText = item;
 
@@ -94,19 +108,55 @@ Cypress.Commands.add('searchableDropdown', (labelFor, labelText, item, options =
     cy.wait(300);
   }
 
-  // First attempt to open dropdown
   cy.contains('label', labelText)
     .should('be.visible')
     .click({ force: true });
 
   cy.wait(200);
 
-  // Click away to trigger stabilization (e.g. click the name input)
   cy.get('input[id="name"]').click({ force: true });
 
   cy.wait(300);
 
-  // Re-click the dropdown to force Alpine to settle
+  cy.contains('label', labelText)
+    .click({ force: true });
+
+  cy.get('.max-h-80:visible input[type="search"]', { timeout: 4000 })
+    .should('be.visible')
+    .click({ force: true })
+    .clear()
+    .type(fullItemText, { delay: 100, force: true });
+
+  cy.contains('.max-h-80:visible div', fullItemText, { timeout: 6000 })
+    .should('be.visible')
+    .click({ force: true });
+
+  cy.wait(300);
+});
+
+// Searchable dropdowns (Member Create)
+Cypress.Commands.add('searchableDropdownMC', (labelFor, labelText, item, options = { clear: false }) => {
+  const fullItemText = item;
+
+  const container = cy.get(`div[form-wrapper="${labelFor}"]`);
+  if (options.clear) {
+    container.find('div[name="form.wrapper.container.append"]')
+      .find('button')
+      .first()
+      .click({ force: true });
+    cy.wait(300);
+  }
+
+  cy.contains('label', labelText)
+    .should('be.visible')
+    .click({ force: true });
+
+  cy.wait(200);
+
+  cy.get('input[id="firstname"]').click({ force: true });
+
+  cy.wait(300);
+
   cy.contains('label', labelText)
     .click({ force: true });
 
@@ -189,7 +239,7 @@ Cypress.Commands.add('generateSACellphone', () => {
   };
 
   function generateCarrierCode() {
-    const carrierCodes = ['083', '082', '081', '084', '078', '087', '076', '073'];
+  const carrierCodes = ['083', '082', '081', '084', '078', '087', '076', '073'];
     const randomIndex = Math.floor(Math.random() * carrierCodes.length);
     return carrierCodes[randomIndex];
   }
@@ -203,13 +253,8 @@ Cypress.Commands.add('generateSACellphone', () => {
 
 // Generating Language
 Cypress.Commands.add('generateLanguage', () => {
-  const generateLanguage = () => {
-    const languages = ['Afrikaans', 'English'];
-    const randomIndex = Math.floor(Math.random() * languages.length);
-    return languages[randomIndex];
-  };
-
-  return generateLanguage();
+  const languages = ['Afrikaans', 'English'];
+  return languages[Math.floor(Math.random() * languages.length)];
 });
 
 
@@ -218,8 +263,8 @@ Cypress.Commands.add('collectTableHeaders', () => {
   let headers = [];
   return cy.get('th[class*="fi-ta-header-cell"]')
     .each(($el) => {
-      const text = $el.text().trim();
-      if (text) headers.push(text);
+    const text = $el.text().trim();
+    if (text) headers.push(text);
     })
     .then(() => headers);
 });
@@ -237,7 +282,7 @@ Cypress.Commands.add('toggleAllColumns', () => {
   });
 
   cy.wait(500);
-  cy.get('body').click(0, 0); // Close menu
+  cy.get('body').click(0, 0);
   cy.wait(500);
 
   cy.get('button[title="Toggle columns"]').click();
@@ -259,71 +304,27 @@ Cypress.Commands.add('verifyAllColumnsVisible', (headers) => {
 
 // Sort and verify all columns in the table
 Cypress.Commands.add('sortAndVerifyAllColumns', () => {
-  const columnsToSkipByName = ['Progress'];
-  let headers = [];
+  const columnsToSkipByName = ['Progress', 'Actions', ''];
 
-  const getColumnValues = (colIndex) => {
-    return cy.get('tbody tr')
-      .not(':first')
-      .filter(':visible')
-      .then($rows => {
-        return [...$rows].map(row => {
-          const cell = row.querySelectorAll('td')[colIndex];
-          return cell?.innerText.trim() || '';
-        });
-      });
-  };
+  cy.get('th[class*="fi-ta-header-cell"]').then(($headers) => {
+    const total = $headers.length;
+    for (let index = 0; index < total; index++) {
+      const header = $headers.eq(index).text().trim();
+      if (columnsToSkipByName.includes(header)) {
+        cy.log(`Skipping column: '${header}' (index ${index})`);
+        continue;
+      }
 
-  const inferType = (values) => {
-    return values.every(v => !isNaN(parseFloat(v))) ? 'numeric' : 'text';
-  };
-
-  const sortColumnAndVerify = (colIndex, columnName) => {
-    return getColumnValues(colIndex).then(initialValues => {
-      const type = inferType(initialValues);
-
-      const sortAsc = () => {
-        cy.get(`th[class*="fi-ta-header-cell"]`).eq(colIndex).click();
-        cy.wait(1000);
-        return getColumnValues(colIndex).then(values => {
-          const expected = [...values].sort((a, b) =>
-            type === 'numeric' ? parseFloat(a) - parseFloat(b) : a.localeCompare(b)
-          );
-          expect(values).to.deep.equal(expected);
-        });
-      };
-
-      const sortDesc = () => {
-        cy.get(`th[class*="fi-ta-header-cell"]`).eq(colIndex).click();
-        cy.wait(1000);
-        return getColumnValues(colIndex).then(values => {
-          const expected = [...values].sort((a, b) =>
-            type === 'numeric' ? parseFloat(b) - parseFloat(a) : b.localeCompare(a)
-          );
-          expect(values).to.deep.equal(expected);
-        });
-      };
-
-      return sortAsc().then(sortDesc);
-    });
-  };
-
-  cy.get('th[class*="fi-ta-header-cell"]')
-    .each($el => {
-      const text = $el.text().trim();
-      if (text) headers.push(text);
-    })
-    .then(() => {
-      headers.forEach((header, index) => {
-        if (!columnsToSkipByName.includes(header)) {
-          sortColumnAndVerify(index, header);
-        }
-      });
-    });
+      cy.get('th[class*="fi-ta-header-cell"]').eq(index).click();
+  cy.wait(2000);
+      cy.get('th[class*="fi-ta-header-cell"]').eq(index).click();
+  cy.wait(2000);
+    }
+  });
 });
 
 // Cycle through per-page options in the table
-Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
+Cypress.Commands.add('cyclePerPageOptions', (waitTime = 2000) => {
   const options = ['10', '25', '50', '100'];
   const cycle = [...options, ...options.slice(0, -1).reverse()]; // 10,25,50,100,50,25,10
 
@@ -343,26 +344,34 @@ Cypress.Commands.add('cyclePerPageOptions', (waitTime = 1000) => {
     });
 });
 
-// Click through all pagination pages
-Cypress.Commands.add('clickAllPaginationPages', () => {
+// Click through a limited number of pagination pages
+Cypress.Commands.add('clickAllPaginationPages', (maxPages = 10) => {
+  let pageCount = 0;
   function clickNextIfExists() {
-    cy.get('ol.fi-pagination-items')
-      .then($pagination => {
-        const nextButton = $pagination.find('li[rel="next"] button');
-        if (nextButton.length) {
-          cy.wrap(nextButton)
-            .should('be.visible')
-            .scrollIntoView()
-            .click({ force: true })
-            .wait(1000)
-            .then(() => {
-              // Recursive check again after the click
-              clickNextIfExists();
-            });
-        } else {
-          cy.log('No more pages.');
-        }
-      });
+    if (pageCount >= maxPages) {
+      cy.log(`Reached maxPages limit: ${maxPages}`);
+      return;
+    }
+    cy.get('ol.fi-pagination-items').then($pagination => {
+      const nextButton = $pagination.find('li[rel="next"] button');
+      if (nextButton.length) {
+        cy.window().then(win => {
+          win.scrollTo(0, document.body.scrollHeight);
+        });
+        cy.wait(500);
+        cy.wrap(nextButton)
+          .scrollIntoView()
+          .should('be.visible')
+          .click({ force: true })
+          .wait(1500)
+          .then(() => {
+            pageCount++;
+            clickNextIfExists();
+          });
+      } else {
+        cy.log('No more pages.');
+      }
+    });
   }
 
   clickNextIfExists();

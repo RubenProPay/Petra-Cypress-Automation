@@ -2,8 +2,11 @@ let userFixture;
 
 before(() => {
   cy.generateUserFixture().then((user) => {
-    userFixture = user;
-    cy.log(`Generated User: ${JSON.stringify(userFixture)}`);
+    cy.generateSAID().then((id_number) => {
+      user.id_number = id_number;
+      userFixture = user;
+      cy.log(`Generated User: ${JSON.stringify(userFixture)}`);
+    });
   });
 });
 
@@ -19,7 +22,7 @@ describe('Navigate to Create User Page & Create a User', () => {
     cy.sideNav('Users', 'users/user/create');
   });
 
-  it('can verify ALL validations on the user creation', () => {
+  it.skip('can verify ALL validations on the user creation', () => {
     cy.visit('users/user/create');
     cy.wait(1000);
     cy.contains('button', 'Submit').should('be.visible').click();

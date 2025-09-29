@@ -1,4 +1,4 @@
-describe('Correct Member Type Check', () => {
+describe('Correct Contact Type Check', () => {
   beforeEach(() => {
     cy.loginRoot();
     cy.visit('/');
@@ -14,10 +14,10 @@ describe('Correct Member Type Check', () => {
     cy.contains('p', 'Update members role.').should('be.visible');
     cy.wait(500);
 
-    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please select a correct Member Type.').scrollIntoView().should('be.visible');
+    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please select a correct Contact Type.').scrollIntoView().should('be.visible');
     cy.wait(500);
 
-    cy.dropdown('member_type_id', 'Member type *', 'Active Member', { clear: true });
+    cy.dropdown('member_type_id', 'Contact type *', 'Active Member', { clear: true });
     cy.wait(500);
 
     cy.get('div.text-gray-400.col-span-4').contains('For role selection, please assign a branch to the member').should('be.visible');
@@ -34,10 +34,10 @@ describe('Correct Member Type Check', () => {
               cy.log('✅ Label "TAK | BRANCH" found — branch is correct');
             });
 
-    cy.dropdown('member_type_id', 'Member type *', 'Normal Member', { clear: true });
+    cy.dropdown('member_type_id', 'Contact type *', 'Normal Member', { clear: true });
     cy.wait(500);
 
-    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please select a correct Member Type.').scrollIntoView().should('be.visible');
+    cy.get('div.text-gray-400.col-span-4').contains('For role selection, please select a correct Contact Type.').scrollIntoView().should('be.visible');
     cy.wait(500);
   });
 
@@ -166,9 +166,9 @@ describe('Correct Member Type Check', () => {
       cy.contains('p', 'Update members branch.').should('be.visible');
 
       cy.get('body').then(($body) => {
-        if ($body.text().includes('For role selection, please select a correct Member Type.')) {
+        if ($body.text().includes('For role selection, please select a correct Contact Type.')) {
           
-          cy.dropdown('member_type_id', 'Member type *', 'Active Member', { clear: true });
+          cy.dropdown('member_type_id', 'Contact type *', 'Active Member', { clear: true });
           cy.wait(500);
 
           cy.contains('span', 'Branch')

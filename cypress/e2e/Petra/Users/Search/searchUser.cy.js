@@ -42,7 +42,7 @@ describe('Navigate to User table and test search + columns', () => {
 
   it('Cycles through per page dropdown', () => {
     cy.visit('/users/user');
-    cy.cyclePerPageOptions(1000);
+    cy.cyclePerPageOptions(2000);
   });
 
   it('Clicks the "Next" page button', () => {
