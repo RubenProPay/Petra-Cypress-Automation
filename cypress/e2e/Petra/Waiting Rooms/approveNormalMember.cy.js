@@ -4,6 +4,7 @@ before(() => {
   cy.generateNormalMemberFixture().then((member) => {
     normalMemberFixture = member;
     cy.log(`Generated Normal Member: ${JSON.stringify(normalMemberFixture)}`);
+    cy.writeFile('cypress/fixtures/normalMemberApproval.json', normalMemberFixture);
   });
 });
 
@@ -39,7 +40,7 @@ describe('Approve Normal Member from the Waiting Rooms', () => {
     cy.visit('/');
   });
 
-  it.skip('should create a Normal Member while being impersonated as a Provincial Admin', () => {
+  it('should create a Normal Member while being impersonated as a Provincial Admin', () => {
     
   });
   

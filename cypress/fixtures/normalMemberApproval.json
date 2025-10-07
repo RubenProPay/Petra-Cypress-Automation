@@ -1,0 +1,18 @@
+{
+  "member_type": "Normal Member",
+  "firstname": "Kaela",
+  "surname": "Baumbach",
+  "title": "Dr.",
+  "gender": "Female",
+  "language": "English",
+  "email": "kaela_baumbach@hotmail.com",
+  "address": {
+    "address2": "4099 N Lincoln Street",
+    "address3": "Apt. 771",
+    "address4": "Fernandoland",
+    "address5": "46950-5256",
+    "province": "Gauteng"
+  },
+  "id_number": "0409202268085",
+  "cellphone": "0769856317"
+}
