@@ -20,6 +20,7 @@ import './memberCommands'
 import './modulePreferencesCommands'
 import './roleCommands'
 import './userCommands'
+import './waitingRoomCommands'
 
 Cypress.on('uncaught:exception', (err, runnable) => {
   const livewireIgnoreList = [

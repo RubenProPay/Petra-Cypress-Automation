@@ -1,0 +1,18 @@
+{
+  "member_type": "Normal Member",
+  "firstname": "Christy",
+  "surname": "Corwin",
+  "title": "Mrs.",
+  "gender": "Male",
+  "language": "Afrikaans",
+  "email": "christy_corwin92@hotmail.com",
+  "address": {
+    "address2": "9064 Mason Lock",
+    "address3": "Suite 560",
+    "address4": "Myabury",
+    "address5": "06355",
+    "province": "Gauteng"
+  },
+  "id_number": "6412020517083",
+  "cellphone": "0763129981"
+}

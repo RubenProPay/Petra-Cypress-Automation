@@ -20,7 +20,7 @@ Cypress.Commands.add("loginRootRuben", () => {
   const sessionId = `user-session-ruben`;
 
   cy.session(sessionId, () => {
-    cy.visit("https://vfplus.datakrag.co.za/login");
+    cy.visit("/");
     cy.get("input[name='email']", { timeout: 6000 }).should('be.visible').type("ruben.dasilva@propaysystems.com");
     cy.get("input[name='password']").type("YWZNxJepZPd7kiq!");
     cy.get("button[type='submit']").click();

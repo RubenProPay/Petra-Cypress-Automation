@@ -52,6 +52,32 @@ module.exports = defineConfig({
             email,
             address
           };
+        },
+        generateNormalMember() {
+          const member_type = faker.helpers.arrayElement(['Normal Member']);
+          const firstname = faker.person.firstName();
+          const surname = faker.person.lastName();
+          const title = faker.helpers.arrayElement(['Dr.', 'Ds.', 'Miss.', 'Mr.', 'Mrs.', 'Ms.']);
+          const gender = faker.helpers.arrayElement(['Male', 'Female']);
+          const language = faker.helpers.arrayElement(['Afrikaans', 'English']);
+          const email = faker.internet.email({ firstName: firstname, lastName: surname }).toLowerCase();
+          const address = {
+            address2: faker.location.streetAddress(),
+            address3: faker.location.secondaryAddress(),
+            address4: faker.location.city(),
+            address5: faker.location.zipCode(),
+            province: faker.helpers.arrayElement(['Gauteng'])
+          };
+          return {
+            member_type,
+            firstname,
+            surname,
+            title,
+            gender,
+            language,
+            email,
+            address
+          };
         }
       });
 
